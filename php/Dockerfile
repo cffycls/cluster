@@ -93,9 +93,4 @@ RUN set -eux; \
     && find -type f -name '*.a' -delete \
     && make install \
 #    && make clean \
-    && cd ../ && rm -rf php-$PHP_VERSION.tar.xz php-$PHP_VERSION \
-	&& apk del $PHPIZE_DEPS $PHPIZE_DEVS
-
-
-WORKDIR /usr/local/php/bin
-
+    && cd ../ && rm -rf php-$PHP_VERSION.tar.xz php-$PHP_VERSION 
