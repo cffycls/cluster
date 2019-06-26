@@ -26,8 +26,7 @@ RUN set -ex; \
 	apk add $REDIS_DEPS \
 	\
 	&& cd /tmp && mkdir -p /usr/src/redis\
-    # 下载过慢
-	# wget -O redis.tar.gz "$REDIS_DOWNLOAD_URL"; \
+	#copy: wget -O redis.tar.gz "$REDIS_DOWNLOAD_URL"; \
 	&& tar -xzf redis.tar.gz -C /usr/src/redis --strip-components=1 \
 	&& rm redis.tar.gz \
 	&& make -C /usr/src/redis -j "$(nproc)" \
@@ -35,8 +34,7 @@ RUN set -ex; \
 	&& rm -r /usr/src/redis \
 	&& apk del $REDIS_DEPS \
 	\
-	&& redis-server --version \
-        && apk del $REDIS_DEPS
+	&& redis-server --version
 
 COPY start.sh /usr/local/bin/
 RUN mkdir /data && chown redis:redis /data && chmod +x /usr/local/bin/start.sh
