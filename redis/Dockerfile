@@ -35,7 +35,8 @@ RUN set -ex; \
 	&& rm -r /usr/src/redis \
 	&& apk del $REDIS_DEPS \
 	\
-	&& redis-server --version
+	&& redis-server --version \
+        && apk del $REDIS_DEPS
 
 COPY start.sh /usr/local/bin/
 RUN mkdir /data && chown redis:redis /data && chmod +x /usr/local/bin/start.sh
