@@ -6,7 +6,7 @@ RUN sed -i 's/dl-cdn.alpinelinux.org/mirrors.aliyun.com/g' /etc/apk/repositories
 	&& apk update
 
 #MAINTAINER 维护者信息
-MAINTAINER cffycls@foxmail.com
+MAINTAINER yongqiang.wang
 
 # add our user and group first to make sure their IDs get assigned consistently, regardless of whatever dependencies get added
 RUN addgroup -S redis && adduser -S -G redis redis
@@ -26,7 +26,8 @@ RUN set -ex; \
 	apk add $REDIS_DEPS \
 	\
 	&& cd /tmp && mkdir -p /usr/src/redis\
-	#copy: wget -O redis.tar.gz "$REDIS_DOWNLOAD_URL"; \
+        # 下载过慢
+	# wget -O redis.tar.gz "$REDIS_DOWNLOAD_URL"; \
 	&& tar -xzf redis.tar.gz -C /usr/src/redis --strip-components=1 \
 	&& rm redis.tar.gz \
 	&& make -C /usr/src/redis -j "$(nproc)" \
@@ -36,9 +37,8 @@ RUN set -ex; \
 	\
 	&& redis-server --version
 
-COPY start.sh /usr/local/bin/
-RUN mkdir /data && chown redis:redis /data && chmod +x /usr/local/bin/start.sh
-WORKDIR /data
+RUN mkdir /data && chown redis:redis /data
+#VOLUME ["/data", "/etc/redis/redis.conf"]
 
 EXPOSE 6379
-CMD ['start.sh']
+#CMD ["redis-server /etc/redis/redis.conf &"] #启动容器时再运行
