@@ -1,0 +1,36 @@
+#docker stop clm4 cls4
+#docker rm clm4 cls4
+docker stop clm4 clm5 cls4 cls5
+docker rm clm4 clm5 cls4 cls5
+rm -rf 6381/data/* 6382/data/* 6383/data/* 6384/data/*
+
+docker run --name clm4 \
+	-p 6381:6379 -p 16381:16379 \
+	--restart=always \
+	--network=mybridge --ip=172.1.50.21 \
+	-v /root/tmp/dk/cluster_redis/6381/data:/data \
+	-v /root/tmp/dk/cluster_redis/6381:/etc/redis \
+	-d cffycls/redis5:1.7 
+docker run --name clm5 \
+	-p 6382:6379 -p 16382:16379 \
+	--restart=always \
+	--network=mybridge --ip=172.1.50.22 \
+	-v /root/tmp/dk/cluster_redis/6382/data:/data \
+	-v /root/tmp/dk/cluster_redis/6382:/etc/redis \
+	-d cffycls/redis5:1.7 
+
+docker run --name cls4 \
+	-p 6383:6379 -p 16383:16379 \
+	--restart=always \
+	--network=mybridge --ip=172.1.30.21 \
+	-v /root/tmp/dk/cluster_redis/6383/data:/data \
+	-v /root/tmp/dk/cluster_redis/6383:/etc/redis \
+	-d cffycls/redis5:1.7 
+	
+docker run --name cls5 \
+	-p 6384:6379 -p 16384:16379 \
+	--restart=always \
+	--network=mybridge --ip=172.1.30.22 \
+	-v /root/tmp/dk/cluster_redis/6384/data:/data \
+	-v /root/tmp/dk/cluster_redis/6384:/etc/redis \
+	-d cffycls/redis5:1.7 
