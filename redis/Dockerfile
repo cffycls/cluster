@@ -32,13 +32,16 @@ RUN set -ex; \
 	&& rm redis.tar.gz \
 	&& make -C /usr/src/redis -j "$(nproc)" \
 	&& make -C /usr/src/redis install \
+        && mv /usr/src/redis/src/redis-trib.rb /bin && chmod +x /bin/redis-trib.rb \
 	&& rm -r /usr/src/redis \
 	&& apk del $REDIS_DEPS \
 	\
+        && ln -sf /usr/share/zoneinfo/Asia/Shanghai /etc/localtime \
+        && echo "Asia/Shanghai" > /etc/timezone \
 	&& redis-server --version
 
 RUN mkdir /data && chown redis:redis /data
 #VOLUME ["/data", "/etc/redis/redis.conf"]
 
 EXPOSE 6379
-#CMD ["redis-server /etc/redis/redis.conf &"] #启动容器时再运行
+CMD ["redis-server","/etc/redis/redis.conf"]

@@ -33,9 +33,8 @@ RUN groupadd -r openresty && useradd -r -g openresty openresty \
            --with-http_iconv_module \
            --with-http_postgres_module \
     \
-    && make -j "$(nproc)" \
-	&& make install \
-	&& rm -rf /usr/src
+    && make -j "$(nproc)" && make install && rm -rf /usr/src \
+    && echo 'Asia/Shanghai'>/etc/timezone && ln -sf /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
 
 VOLUME ["/usrl/ocal/openresty/nginx/conf","/usrl/ocal/openresty/nginx/html"]
 
