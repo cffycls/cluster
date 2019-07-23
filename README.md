@@ -11,5 +11,6 @@
 3、使用 rec.nginx.sh ，搭配配置文件，建立 openresty 官方更新的服务环境；  
 4、使用 rec.php.sh . 搭配配置文件，构建 php7.3 的镜像环境；  
 5、使用 cluster_redis/rec.sh ，搭配配置文件，创建 基于redis-5.05 的3对主从集群；  
-6、debian系统docker自动安装：docker_install.sh，TDengine 安装后提示；
+6、debian系统docker自动安装：docker_install.sh，TDengine 安装后提示； 
+
 
