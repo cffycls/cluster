@@ -31,7 +31,7 @@ RUN sed -i 's/dl-cdn.alpinelinux.org/mirrors.aliyun.com/g' /etc/apk/repositories
     #编译工具
     && PHPIZE_DEPS="\
             autoconf \
-            dpkg-dev dpkg \
+         dpkg-dev dpkg \
             file \
             g++ \
             gcc \
@@ -105,6 +105,7 @@ RUN sed -i 's/dl-cdn.alpinelinux.org/mirrors.aliyun.com/g' /etc/apk/repositories
         --with-mhash \
         --with-iconv \
         --disable-fileinfo \
+        --enable-maintainer-zts \
         \
         --enable-fpm --with-fpm-user=www-data --with-fpm-group=www-data --disable-cgi \
     && make -j "$(nproc)" \
