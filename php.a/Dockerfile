@@ -105,7 +105,7 @@ RUN sed -i 's/dl-cdn.alpinelinux.org/mirrors.aliyun.com/g' /etc/apk/repositories
         --with-mhash \
         --with-iconv \
         --disable-fileinfo \
-        --enable-maintainer-zts \
+        #--enable-maintainer-zts \
         \
         --enable-fpm --with-fpm-user=www-data --with-fpm-group=www-data --disable-cgi \
     && make -j "$(nproc)" \
@@ -184,9 +184,9 @@ RUN sed -i 's/dl-cdn.alpinelinux.org/mirrors.aliyun.com/g' /etc/apk/repositories
     ./configure --with-php-config=/usr/local/php/bin/php-config && \
     make && make install && \
     cd ../ && rm -rf uuid \
-	\
-	\
-	#memcached 3.1.3 需要libmemcached
+    \
+    \
+    #memcached 3.1.3 需要libmemcached
     && \
     apk add libmemcached-dev && \
     mkdir -p ~/build/memcached_p && cd ~/build/memcached_p && \
@@ -196,36 +196,59 @@ RUN sed -i 's/dl-cdn.alpinelinux.org/mirrors.aliyun.com/g' /etc/apk/repositories
     ./configure --with-php-config=/usr/local/php/bin/php-config && \
     make && make install && \
     cd ../ && rm -rf memcached_p \
-	\
-	\
-	#event 2.5.3
+    \
+    \
+    #event 2.5.3
     && \
     mkdir -p ~/build/event && cd ~/build/event && \
 	# wget -O /tmp/event.tgz "http://pecl.php.net/get/event-2.5.3.tgz" && \
-	tar -zxf /tmp/event.tgz --strip-components 1 && \
-	/usr/local/php/bin/phpize && \
+    tar -zxf /tmp/event.tgz --strip-components 1 && \
+    /usr/local/php/bin/phpize && \
     ./configure \
         --with-php-config=/usr/local/php/bin/php-config \
         --with-event-libevent-dir=/usr \
         && \
     make && make install && \
     cd ../ && rm -rf event \
-	\
-	\
+    \
+    \
+    #pthreads -->Segmentation fault 分段错误
+    #&& \
+    #mkdir -p ~/build/pthreads && cd ~/build/pthreads && \
+    #unzip /tmp/pthreads.zip && cd pthreads-master \
+    #/usr/local/php/bin/phpize && \
+    #./configure --with-php-config=/usr/local/php/bin/php-config && \
+    #make && make install && \
+    #cd ../../ && rm -rf pthreads \
+    #\
+    \
+    # imagick-3.4.4 需要imagemagick
+    && \
+    mkdir -p ~/build/imagemagick && cd ~/build/imagemagick && \
+    tar -zxf /tmp/imagemagick.tgz --strip-components 1 && \
+    make && make install && \
+    cd ../ && rm -rf imagemagick && \
+    \
+    mkdir -p ~/build/imagick && cd ~/build/imagick && \
+    tar -zxf /tmp/imagick.tgz --strip-components 1 && \
+    /usr/local/php/bin/phpize && \
+    ./configure --with-php-config=/usr/local/php/bin/php-config && \
+    make && make install && \
+    cd ../ && rm -rf imagick \
+    \
 #======================================================================================================
     \
 #======================================================================================================
-    && /usr/local/php/bin/pecl channel-update pecl.php.net \
-    && /usr/local/php/bin/pecl install igbinary \
-    && /usr/local/php/bin/pecl install amqp \
+    \
+    && ln -s /usr/local/php/bin/* /usr/local/bin \
+    && pecl channel-update pecl.php.net \
+    && pecl install igbinary \
+    && pecl install amqp \
     && rm -rf /tmp/* ~/.pearrc ~/build \
     && apk del $PHPIZE_DEPS \
-	&& ln -s /usr/local/php/bin/php /usr/bin/php \
-	&& ln -s /usr/local/php/bin/pecl /usr/bin/pecl \
-	&& ln -s /usr/local/php/sbin/php-fpm /usr/bin/php-fpm \
     && php -m
 
 EXPOSE 9000
 CMD ["php-fpm"]
 
-#docker build -t cffycls/php7:v0.9 .
+#docker build -t cffycls/php7:v1.10 .

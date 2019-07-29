@@ -8,3 +8,6 @@ wget -O packages/php.tar.xz "https://secure.php.net/get/php-7.3.7.tar.xz/from/th
 	wget -O packages/uuid.tgz "http://pecl.php.net/get/uuid-1.0.4.tgz" && \
 	wget -O packages/memcached.tgz "https://pecl.php.net/get/memcached-3.1.3.tgz" && \
 	wget -O packages/event.tgz "http://pecl.php.net/get/event-2.5.3.tgz"
+	wget -O packages/pthreads.zip "https://codeload.github.com/krakjoe/pthreads/zip/master" && \
+	wget -O imagemagick.tgz "https://www.imagemagick.org/download/ImageMagick.tar.gz" && \
+	wget -O imagick.tgz "https://pecl.php.net/get/imagick-3.4.4.tgz" 
