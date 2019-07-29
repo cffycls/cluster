@@ -10,3 +10,5 @@ add-apt-repository "deb [arch=amd64] https://mirrors.tuna.tsinghua.edu.cn/docker
 #5. 更新源并安装
 apt-get update && apt-get install docker-ce -y
 
+
+docker network create mybridge --subnet=172.1.0.0/16

@@ -105,7 +105,6 @@ RUN sed -i 's/dl-cdn.alpinelinux.org/mirrors.aliyun.com/g' /etc/apk/repositories
         --with-mhash \
         --with-iconv \
         --disable-fileinfo \
-        #--enable-maintainer-zts \
         \
         --enable-fpm --with-fpm-user=www-data --with-fpm-group=www-data --disable-cgi \
     && make -j "$(nproc)" \
@@ -113,6 +112,7 @@ RUN sed -i 's/dl-cdn.alpinelinux.org/mirrors.aliyun.com/g' /etc/apk/repositories
     && make install \
     && rm -rf /tmp/pear ~/.pearrc \
     && cd ../ && rm -rf php \
+    #--enable-maintainer-zts \ #pthreads报错不用
 	\
 #======================================================================================================
     \
@@ -201,7 +201,7 @@ RUN sed -i 's/dl-cdn.alpinelinux.org/mirrors.aliyun.com/g' /etc/apk/repositories
     #event 2.5.3
     && \
     mkdir -p ~/build/event && cd ~/build/event && \
-	# wget -O /tmp/event.tgz "http://pecl.php.net/get/event-2.5.3.tgz" && \
+    # wget -O /tmp/event.tgz "http://pecl.php.net/get/event-2.5.3.tgz" && \
     tar -zxf /tmp/event.tgz --strip-components 1 && \
     /usr/local/php/bin/phpize && \
     ./configure \
