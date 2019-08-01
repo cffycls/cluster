@@ -17,7 +17,9 @@ COPY packages /tmp
 # wget -O packages/libuuid.tgz "http://nchc.dl.sourceforge.net/project/libuuid/libuuid-1.0.3.tar.gz" && \
 # wget -O packages/uuid.tgz "http://pecl.php.net/get/uuid-1.0.4.tgz" && \
 # wget -O packages/memcached.tgz "https://pecl.php.net/get/memcached-3.1.3.tgz" && \
-# wget -O packages/event.tgz "http://pecl.php.net/get/event-2.5.3.tgz"
+# wget -O packages/event.tgz "http://pecl.php.net/get/event-2.5.3.tgz" && \
+# wget -O imagemagick.tgz "https://www.imagemagick.org/download/ImageMagick.tar.gz" && \
+# wget -O imagick.tgz "https://pecl.php.net/get/imagick-3.4.4.tgz"
 ###
 RUN sed -i 's/dl-cdn.alpinelinux.org/mirrors.aliyun.com/g' /etc/apk/repositories \
     \
@@ -226,6 +228,7 @@ RUN sed -i 's/dl-cdn.alpinelinux.org/mirrors.aliyun.com/g' /etc/apk/repositories
     && \
     mkdir -p ~/build/imagemagick && cd ~/build/imagemagick && \
     tar -zxf /tmp/imagemagick.tgz --strip-components 1 && \
+    ./configure && \
     make && make install && \
     cd ../ && rm -rf imagemagick && \
     \
@@ -240,7 +243,7 @@ RUN sed -i 's/dl-cdn.alpinelinux.org/mirrors.aliyun.com/g' /etc/apk/repositories
     \
 #======================================================================================================
     \
-    && ln -s /usr/local/php/bin/* /usr/local/bin \
+    && ln -s /usr/local/php/bin/* /usr/local/bin && ln -s /usr/local/php/sbin/php-fpm /usr/local/bin \
     && pecl channel-update pecl.php.net \
     && pecl install igbinary \
     && pecl install amqp \
