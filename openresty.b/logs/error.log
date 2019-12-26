@@ -1,0 +1,58 @@
+2019/12/24 03:03:48 [notice] 1#1: using the "epoll" event method
+2019/12/24 03:03:48 [notice] 1#1: openresty/1.15.8.2
+2019/12/24 03:03:48 [notice] 1#1: OS: Linux 4.15.0-30deepin-generic
+2019/12/24 03:03:48 [notice] 1#1: getrlimit(RLIMIT_NOFILE): 1048576:1048576
+2019/12/24 03:03:48 [notice] 1#1: start worker processes
+2019/12/24 03:03:48 [notice] 1#1: start worker process 6
+2019/12/24 03:05:06 [notice] 1#1: signal 3 (SIGQUIT) received, shutting down
+2019/12/24 03:05:06 [notice] 6#6: gracefully shutting down
+2019/12/24 03:05:06 [notice] 6#6: exiting
+2019/12/24 03:05:06 [notice] 6#6: exit
+2019/12/24 03:05:06 [notice] 1#1: signal 17 (SIGCHLD) received from 6
+2019/12/24 03:05:06 [notice] 1#1: worker process 6 exited with code 0
+2019/12/24 03:05:06 [notice] 1#1: exit
+2019/12/24 03:05:08 [notice] 1#1: using the "epoll" event method
+2019/12/24 03:05:08 [notice] 1#1: openresty/1.15.8.2
+2019/12/24 03:05:08 [notice] 1#1: OS: Linux 4.15.0-30deepin-generic
+2019/12/24 03:05:08 [notice] 1#1: getrlimit(RLIMIT_NOFILE): 1048576:1048576
+2019/12/24 03:05:08 [notice] 1#1: start worker processes
+2019/12/24 03:05:08 [notice] 1#1: start worker process 6
+2019/12/24 03:17:00 [notice] 1#1: signal 3 (SIGQUIT) received, shutting down
+2019/12/24 03:17:00 [notice] 6#6: gracefully shutting down
+2019/12/24 03:17:00 [notice] 6#6: exiting
+2019/12/24 03:17:00 [notice] 6#6: exit
+2019/12/24 03:17:00 [notice] 1#1: signal 17 (SIGCHLD) received from 6
+2019/12/24 03:17:00 [notice] 1#1: worker process 6 exited with code 0
+2019/12/24 03:17:00 [notice] 1#1: exit
+2019/12/24 03:17:01 [notice] 1#1: using the "epoll" event method
+2019/12/24 03:17:01 [notice] 1#1: openresty/1.15.8.2
+2019/12/24 03:17:01 [notice] 1#1: OS: Linux 4.15.0-30deepin-generic
+2019/12/24 03:17:01 [notice] 1#1: getrlimit(RLIMIT_NOFILE): 1048576:1048576
+2019/12/24 03:17:01 [notice] 1#1: start worker processes
+2019/12/24 03:17:01 [notice] 1#1: start worker process 6
+2019/12/24 03:19:39 [notice] 1#1: signal 3 (SIGQUIT) received, shutting down
+2019/12/24 03:19:39 [notice] 6#6: gracefully shutting down
+2019/12/24 03:19:39 [notice] 6#6: exiting
+2019/12/24 03:19:39 [notice] 6#6: exit
+2019/12/24 03:19:39 [notice] 1#1: signal 17 (SIGCHLD) received from 6
+2019/12/24 03:19:39 [notice] 1#1: worker process 6 exited with code 0
+2019/12/24 03:19:39 [notice] 1#1: exit
+2019/12/25 12:56:25 [notice] 1#1: using the "epoll" event method
+2019/12/25 12:56:25 [notice] 1#1: openresty/1.15.8.2
+2019/12/25 12:56:25 [notice] 1#1: OS: Linux 4.15.0-30deepin-generic
+2019/12/25 12:56:25 [notice] 1#1: getrlimit(RLIMIT_NOFILE): 1048576:1048576
+2019/12/25 12:56:25 [notice] 1#1: start worker processes
+2019/12/25 12:56:25 [notice] 1#1: start worker process 6
+2019/12/25 13:28:23 [notice] 1#1: signal 3 (SIGQUIT) received, shutting down
+2019/12/25 13:28:23 [notice] 6#6: gracefully shutting down
+2019/12/25 13:28:23 [notice] 6#6: exiting
+2019/12/25 13:28:23 [notice] 6#6: exit
+2019/12/25 13:28:23 [notice] 1#1: signal 17 (SIGCHLD) received from 6
+2019/12/25 13:28:23 [notice] 1#1: worker process 6 exited with code 0
+2019/12/25 13:28:23 [notice] 1#1: exit
+2019/12/25 13:29:26 [notice] 1#1: using the "epoll" event method
+2019/12/25 13:29:26 [notice] 1#1: openresty/1.15.8.2
+2019/12/25 13:29:26 [notice] 1#1: OS: Linux 4.15.0-30deepin-generic
+2019/12/25 13:29:26 [notice] 1#1: getrlimit(RLIMIT_NOFILE): 1048576:1048576
+2019/12/25 13:29:26 [notice] 1#1: start worker processes
+2019/12/25 13:29:26 [notice] 1#1: start worker process 6
