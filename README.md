@@ -5,6 +5,7 @@
 文章地址：https://segmentfault.com/u/canglangshui/articles 
 
 [更新]2019.12.26 10:26
+=======
 虚拟机无损搭建  
 1、整体目录调整到/home/wwwroot/cluster;  
 2、php镜像加入apcu扩展;  
