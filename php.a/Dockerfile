@@ -6,19 +6,11 @@ FROM alpine:3.9
 MAINTAINER cffycls@foxmail.com
 
 # dependencies required for running "phpize"
-<<<<<<< HEAD
 ENV PHP_VERSION 7.3.13
 
 COPY packages /tmp
 ###
 # wget -O packages/php.tar.xz "https://secure.php.net/get/php-7.3.13.tar.xz/from/this/mirror &&\
-=======
-ENV PHP_VERSION 7.3.7
-
-COPY packages /tmp
-###
-# wget -O packages/php.tar.xz "https://secure.php.net/get/php-7.3.7.tar.xz/from/this/mirror &&\
->>>>>>> a1ba97448eb0591672e5fec47b8981de01bf6183
 # wget -O packages/swoole.tar.gz "https://github.com/swoole/swoole-src/archive/master.tar.gz" && \
 # wget -O packages/inotify.tgz "https://pecl.php.net/get/inotify-2.0.0.tgz" && \
 # wget -O packages/redis.tgz "https://pecl.php.net/get/redis-5.0.0.tgz" && \
@@ -255,18 +247,11 @@ RUN sed -i 's/dl-cdn.alpinelinux.org/mirrors.aliyun.com/g' /etc/apk/repositories
     && pecl channel-update pecl.php.net \
     && pecl install igbinary \
     && pecl install amqp \
-<<<<<<< HEAD
     && pecl install apcu \
-=======
->>>>>>> a1ba97448eb0591672e5fec47b8981de01bf6183
     && rm -rf /tmp/* ~/.pearrc ~/build \
     && apk del $PHPIZE_DEPS \
     && php -m
 
 EXPOSE 9000
 CMD ["php-fpm"]
-<<<<<<< HEAD
-=======
-
->>>>>>> a1ba97448eb0591672e5fec47b8981de01bf6183
 #docker build -t cffycls/php7:v1.10 .
