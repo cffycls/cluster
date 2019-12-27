@@ -12,3 +12,4 @@ docker run -itd --name n2 -p 8082:80 --network=mybridge \
 	-v /home/wwwroot/cluster/openresty.b/conf:/usr/local/openresty/nginx/conf \
 	-v /home/wwwroot/cluster/openresty.b/logs:/usr/local/openresty/nginx/logs \
 	-v /home/wwwroot/cluster/html:/usr/local/openresty/nginx/html openresty/openresty:stretch
+

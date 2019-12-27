@@ -16,3 +16,4 @@ docker run --name ms --restart=always -p 3308:3306 \
 echo -e '\nTo associate mater & slave, you should exec sentence like this in mysql command interface of the slave:'
 echo 'change master to master_host='172.1.1.11',master_port=3306,master_user='repl',\
        	master_password='Ron_master_1',master_log_file='mysql-bin.000006',master_log_pos=155;'
+

@@ -254,5 +254,4 @@ RUN sed -i 's/dl-cdn.alpinelinux.org/mirrors.aliyun.com/g' /etc/apk/repositories
 
 EXPOSE 9000
 CMD ["php-fpm"]
-
 #docker build -t cffycls/php7:v1.10 .

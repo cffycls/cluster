@@ -33,4 +33,3 @@ docker run --name mg3 \
 	-v /home/wwwroot/cluster/mongodb.b/data:/data/db \
 	-d mongo mongod --config /etc/mongod.conf
 
-

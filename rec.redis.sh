@@ -14,4 +14,5 @@ docker run --name rs \
 	-v /home/wwwroot/cluster/redis_slave/data:/data \
 	-v /home/wwwroot/cluster/redis_slave/redis.conf:/etc/redis/redis.conf \
 	-v /home/wwwroot/cluster/redis_slave/sentinel.conf:/etc/redis/sentinel.conf \
-	-d cffycls/redis5:1.7  
+	-d cffycls/redis5:1.7 
+

@@ -19,3 +19,4 @@ docker run --name p3 --network=mybridge --ip=172.1.1.13 \
 	-v /home/wwwroot/cluster/html:/var/www/html \
 	-v /home/wwwroot/cluster/php.c/fpm.log:/usr/local/php/var/log/php-fpm.log \
 	-itd cffycls/php7:1.11
+
