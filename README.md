@@ -4,6 +4,9 @@
 搭建集群环境脚本
 文章地址：https://segmentfault.com/u/canglangshui/articles 
 
+[更新]2020.01.04 11:20
+1、MySQL技巧测试sql文件；
+
 [更新]2019.12.26 10:26
 =======
 虚拟机无损搭建  
