@@ -1,0 +1,7 @@
+.idea/
+openresty.a/logs/
+openresty.b/logs/
+redis/data/
+redis_slave/data/
+html/seckill/
+ngx_lua_waf/
