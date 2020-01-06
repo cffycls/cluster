@@ -5,3 +5,4 @@ redis/data/
 redis_slave/data/
 html/seckill/
 ngx_lua_waf/
+rabbitmq/data*

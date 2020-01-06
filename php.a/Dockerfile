@@ -1,6 +1,6 @@
 # php7.3.5; Feb 7, 2019 link: https://github.com/docker-library/php/blob/master/7.3/alpine3.9/fpm/Dockerfile
 # Base images 基础镜像+阿里源
-FROM alpine:3.9
+FROM alpine:3.11
 
 #MAINTAINER 维护者信息
 MAINTAINER cffycls@foxmail.com
@@ -18,8 +18,8 @@ COPY packages /tmp
 # wget -O packages/uuid.tgz "http://pecl.php.net/get/uuid-1.0.4.tgz" && \
 # wget -O packages/memcached.tgz "https://pecl.php.net/get/memcached-3.1.3.tgz" && \
 # wget -O packages/event.tgz "http://pecl.php.net/get/event-2.5.3.tgz" && \
-# wget -O imagemagick.tgz "https://www.imagemagick.org/download/ImageMagick.tar.gz" && \
-# wget -O imagick.tgz "https://pecl.php.net/get/imagick-3.4.4.tgz"
+# wget -O packages/imagemagick.tgz "https://www.imagemagick.org/download/ImageMagick.tar.gz" && \
+# wget -O packages/imagick.tgz "https://pecl.php.net/get/imagick-3.4.4.tgz"
 ###
 RUN sed -i 's/dl-cdn.alpinelinux.org/mirrors.aliyun.com/g' /etc/apk/repositories \
     \
@@ -70,7 +70,6 @@ RUN sed -i 's/dl-cdn.alpinelinux.org/mirrors.aliyun.com/g' /etc/apk/repositories
 		$PHPIZE_DEPS $PHP_DEVS \
     \
     && mkdir -p ~/bulid/php && cd ~/bulid/php \
-    # && wget -O /tmp/php.tar.xz "https://secure.php.net/get/php-$PHP_VERSION.tar.xz/from/this/mirror" \
     && tar -Jxf /tmp/php.tar.xz --strip-components 1 \
 	&& ./configure \
         --prefix="/usr/local/php" \
@@ -125,7 +124,6 @@ RUN sed -i 's/dl-cdn.alpinelinux.org/mirrors.aliyun.com/g' /etc/apk/repositories
 	#swoole
     && \
     mkdir -p ~/build/swoole && cd ~/build/swoole && \
-    # wget -O /tmp/swoole.tar.gz "https://github.com/swoole/swoole-src/archive/master.tar.gz" && \
     tar zxvf /tmp/swoole.tar.gz --strip-components 1 && \
     /usr/local/php/bin/phpize && \
     ./configure \
@@ -145,7 +143,6 @@ RUN sed -i 's/dl-cdn.alpinelinux.org/mirrors.aliyun.com/g' /etc/apk/repositories
 	#inotify 2.0.0
     && \
     mkdir -p ~/build/inotify && cd ~/build/inotify && \
-    # wget -O /tmp/inotify.tgz "https://pecl.php.net/get/inotify-2.0.0.tgz" && \
     tar -zxf /tmp/inotify.tgz --strip-components 1 && \
     /usr/local/php/bin/phpize && \
     ./configure \
@@ -159,7 +156,6 @@ RUN sed -i 's/dl-cdn.alpinelinux.org/mirrors.aliyun.com/g' /etc/apk/repositories
     #redis 5.0.0
     && \
     mkdir -p ~/build/redis && cd ~/build/redis && \
-    # wget -O /tmp/redis.tgz "https://pecl.php.net/get/redis-5.0.0.tgz" && \
     tar -zxf /tmp/redis.tgz --strip-components 1 && \
     /usr/local/php/bin/phpize && \
     ./configure \
@@ -173,14 +169,12 @@ RUN sed -i 's/dl-cdn.alpinelinux.org/mirrors.aliyun.com/g' /etc/apk/repositories
     #uuid 1.0.4 (libuuid-1.0.3)
     && \
     mkdir -p ~/build/libuuid && cd ~/build/libuuid && \
-    # wget -O /tmp/libuuid.tgz "http://nchc.dl.sourceforge.net/project/libuuid/libuuid-1.0.3.tar.gz" && \
     tar -zxf /tmp/libuuid.tgz --strip-components 1 && \
     ./configure --prefix=/usr && \
     make && make install && \
     cd ../ && rm -rf libuuid && \
     \
     mkdir -p ~/build/uuid && cd ~/build/uuid && \
-    # wget -O /tmp/uuid.tgz "http://pecl.php.net/get/uuid-1.0.4.tgz" && \
     tar -zxf /tmp/uuid.tgz --strip-components 1 && \
     /usr/local/php/bin/phpize && \
     ./configure --with-php-config=/usr/local/php/bin/php-config && \
@@ -192,7 +186,6 @@ RUN sed -i 's/dl-cdn.alpinelinux.org/mirrors.aliyun.com/g' /etc/apk/repositories
     && \
     apk add libmemcached-dev && \
     mkdir -p ~/build/memcached_p && cd ~/build/memcached_p && \
-    # wget -O /tmp/memcached.tgz "https://pecl.php.net/get/memcached-3.1.3.tgz" && \
     tar -zxf /tmp/memcached.tgz --strip-components 1 && \
     /usr/local/php/bin/phpize && \
     ./configure --with-php-config=/usr/local/php/bin/php-config && \
@@ -203,7 +196,6 @@ RUN sed -i 's/dl-cdn.alpinelinux.org/mirrors.aliyun.com/g' /etc/apk/repositories
     #event 2.5.3
     && \
     mkdir -p ~/build/event && cd ~/build/event && \
-    # wget -O /tmp/event.tgz "http://pecl.php.net/get/event-2.5.3.tgz" && \
     tar -zxf /tmp/event.tgz --strip-components 1 && \
     /usr/local/php/bin/phpize && \
     ./configure \
@@ -248,10 +240,11 @@ RUN sed -i 's/dl-cdn.alpinelinux.org/mirrors.aliyun.com/g' /etc/apk/repositories
     && pecl install igbinary \
     && pecl install amqp \
     && pecl install apcu \
+    && pecl install protobuf \
     && rm -rf /tmp/* ~/.pearrc ~/build \
     && apk del $PHPIZE_DEPS \
     && php -m
 
 EXPOSE 9000
 CMD ["php-fpm"]
-#docker build -t cffycls/php7:v1.10 .
+#docker build -t cffycls/php7 .
