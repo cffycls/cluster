@@ -17,6 +17,10 @@ use Hyperf\Di\Container;
 use Hyperf\Di\Definition\DefinitionSourceFactory;
 use Hyperf\Utils\ApplicationContext;
 
+/**
+ * 1. DefinitionSourceFactory __construct
+ * 2. __invoke函数式调用
+ */
 $container = new Container((new DefinitionSourceFactory(true))());
 
 if (! $container instanceof \Psr\Container\ContainerInterface) {
