@@ -12,5 +12,7 @@ declare(strict_types=1);
 
 return [
     'http' => [
+        //全局中间件
+        \App\Middleware\GlobalMiddleware::class,
     ],
 ];
