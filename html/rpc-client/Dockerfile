@@ -1,4 +1,4 @@
-# Default rec.sh
+# Default Dockerfile
 #
 # @link     https://www.hyperf.io
 # @document https://doc.hyperf.io

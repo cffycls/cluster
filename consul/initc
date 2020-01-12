@@ -1,0 +1,2 @@
+#!/bin/sh
+consul agent -bootstrap-expect=1 -client-node=client1 -ui -data-dir /consul/data -client=0.0.0.0 -join=172.10.1.11
