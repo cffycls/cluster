@@ -30,7 +30,7 @@ return [
     'settings' => [
         'enable_coroutine' => true,
         // 'worker_num' => swoole_cpu_num(),
-        'worker_num' => 3,
+        'worker_num' => 4,
         'pid_file' => BASE_PATH . '/runtime/hyperf.pid',
         'open_tcp_nodelay' => true,
         'max_coroutine' => 100000,
