@@ -7,7 +7,7 @@ docker run --name rm \
 	-v /home/wwwroot/cluster/redis/data:/data \
 	-v /home/wwwroot/cluster/redis/redis.conf:/etc/redis/redis.conf \
 	-v /home/wwwroot/cluster/redis/sentinel.conf:/etc/redis/sentinel.conf \
-	-d cffycls/redis5:1.7
+	-d cffycls/redis5
 
 # --restart=always 
 
@@ -16,4 +16,4 @@ docker run --name rs \
 	-v /home/wwwroot/cluster/redis_slave/data:/data \
 	-v /home/wwwroot/cluster/redis_slave/redis.conf:/etc/redis/redis.conf \
 	-v /home/wwwroot/cluster/redis_slave/sentinel.conf:/etc/redis/sentinel.conf \
-	-d cffycls/redis5:1.7 
+	-d cffycls/redis5 
