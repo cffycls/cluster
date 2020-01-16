@@ -11,4 +11,8 @@ declare(strict_types=1);
  */
 
 return [
+	/**
+	 * 接口的实体化依赖
+	 */
+	App\Rpc\CalculatorServiceInterface::class => App\Rpc\CalculatorService::class
 ];

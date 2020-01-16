@@ -15,7 +15,7 @@ class UserService
 	 * @Inject()
 	 * @var EventDispatcherInterface
 	 */
-	private $eventDispatcher;
+	private $eventDispatcher; //引入事件监听分发类
 
 	public function register()
 	{

@@ -32,10 +32,10 @@ class CoroutineController
     {
         $time = (float) time() + floatval(microtime());
         $client = $this->clientFactory->create();
-        $client->get('127.0.0.1:9501/Coroutine/sleep?second=2');
+        $client->get('127.0.0.1:9501/coroutine/sleep?second=2');
 
         $client = $this->clientFactory->create();
-        $client->get('127.0.0.1:9501/Coroutine/sleep?second=2');
+        $client->get('127.0.0.1:9501/coroutine/sleep?second=2');
 
         return __FUNCTION__.' ok: '. round((float) time() + floatval(microtime()) - $time,4);
     }
@@ -51,12 +51,12 @@ class CoroutineController
         $channel = new \Swoole\Coroutine\Channel();
         co(function () use ($channel) {
             $client = $this->clientFactory->create();
-            $client->get('127.0.0.1:9501/Coroutine/sleep?second=2');
+            $client->get('127.0.0.1:9501/coroutine/sleep?second=2');
             $channel->push('123');
         });
         co(function () use ($channel) {
             $client = $this->clientFactory->create();
-            $client->get('127.0.0.1:9501/Coroutine/sleep?second=2');
+            $client->get('127.0.0.1:9501/coroutine/sleep?second=2');
             $channel->push('123');
         });
         $result[] = $channel->pop();
@@ -78,13 +78,13 @@ class CoroutineController
         $result = [];
         co(function () use ($group, &$result) {
             $client = $this->clientFactory->create();
-            $client->get('127.0.0.1:9501/Coroutine/sleep?second=1');
+            $client->get('127.0.0.1:9501/coroutine/sleep?second=1');
             $result[] = '123';
             $group->done();
         });
         co(function () use ($group, &$result) {
             $client = $this->clientFactory->create();
-            $client->get('127.0.0.1:9501/Coroutine/sleep?second=2');
+            $client->get('127.0.0.1:9501/coroutine/sleep?second=2');
             $result[] = '321';
             $group->done();
         });
@@ -104,12 +104,12 @@ class CoroutineController
         $parallel = new \Hyperf\Utils\Parallel(); //2
         $parallel->add(function () {
             $client = $this->clientFactory->create();
-            $client->get('127.0.0.1:9501/Coroutine/sleep?second=1');
+            $client->get('127.0.0.1:9501/coroutine/sleep?second=1');
             return '123: '. \Hyperf\Utils\Coroutine::id();
         });
         $parallel->add(function () {
             $client = $this->clientFactory->create();
-            $client->get('127.0.0.1:9501/Coroutine/sleep?second=2');
+            $client->get('127.0.0.1:9501/coroutine/sleep?second=2');
             return '321: '. \Hyperf\Utils\Coroutine::id();
         });
         $result = $parallel->wait();
@@ -123,12 +123,12 @@ class CoroutineController
         $result = parallel([
             function () {
                 $client = $this->clientFactory->create();
-                $client->get('127.0.0.1:9501/Coroutine/sleep?second=1');
+                $client->get('127.0.0.1:9501/coroutine/sleep?second=1');
                 return '123: '. \Hyperf\Utils\Coroutine::id();
             },
             function () {
                 $client = $this->clientFactory->create();
-                $client->get('127.0.0.1:9501/Coroutine/sleep?second=2');
+                $client->get('127.0.0.1:9501/coroutine/sleep?second=2');
                 return '321: '. \Hyperf\Utils\Coroutine::id();
             }
         ]);
@@ -150,7 +150,7 @@ class CoroutineController
         for ($i = 0; $i < 15; ++$i) {
             $concurrent->create(function () use ($i, &$result) {
                 $client = $this->clientFactory->create();
-                $client->get('127.0.0.1:9501/Coroutine/sleep?second='. ($i%5+1));
+                $client->get('127.0.0.1:9501/coroutine/sleep?second='. ($i%5+1));
                 $result[] = [$i. ': '. \Hyperf\Utils\Coroutine::id()];
                 return 1;
             });

@@ -15,6 +15,7 @@ use Hyperf\Di\Aop\ProceedingJoinPoint;
  */
 class FooSpect extends AbstractAspect
 {
+	//定义切入类
     public $classes = [
         //SomeClass::class,
         //'App\Service\SomeClass::someMethod',
@@ -23,6 +24,7 @@ class FooSpect extends AbstractAspect
         //FooController::class .'::'. 'show',
     ];
 
+    //如果要切入注解类
     public $annotations = [
         FooAnnotation::class
     ];

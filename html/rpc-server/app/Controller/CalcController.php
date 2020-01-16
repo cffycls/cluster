@@ -3,18 +3,19 @@
 
 namespace App\Controller;
 
-use App\Rpc\CalculatorService;
+use App\Rpc\CalculatorServiceInterface;
 use Hyperf\Di\Annotation\Inject;
 use Hyperf\HttpServer\Annotation\AutoController;
 
 /**
+ * //测试调用
  * @AutoController()
  */
 class CalcController
 {
     /**
      * @Inject()
-     * @var CalculatorService
+     * @var CalculatorServiceInterface
      */
     public $calcService;
 

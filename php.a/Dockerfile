@@ -2,7 +2,7 @@
 # Base images 基础镜像+阿里源
 FROM alpine:3.11
 
-#MAINTAINER 维护者信息
+#MAINTAINER 维护者信息: +fileinfo
 MAINTAINER cffycls@foxmail.com
 
 # dependencies required for running "phpize"
@@ -105,7 +105,6 @@ RUN sed -i 's/dl-cdn.alpinelinux.org/mirrors.aliyun.com/g' /etc/apk/repositories
         --with-gettext \
         --with-mhash \
         --with-iconv \
-        --disable-fileinfo \
         \
         --enable-fpm --with-fpm-user=www-data --with-fpm-group=www-data --disable-cgi \
     && make -j "$(nproc)" \

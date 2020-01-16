@@ -13,6 +13,7 @@ declare(strict_types=1);
 return [
     'handler' => [
         'http' => [
+        	//注释掉其它，或stop
         	App\Exception\Handler\TestExceptionHandler::class,
             App\Exception\Handler\AppExceptionHandler::class,
         ],

@@ -3,7 +3,6 @@
 
 namespace App\Controller;
 
-use App\Rpc\CalculatorServiceConsumer;
 use App\Rpc\CalculatorServiceInterface;
 use Hyperf\Di\Annotation\Inject;
 use Hyperf\HttpServer\Annotation\AutoController;
@@ -16,18 +15,17 @@ class CalcController extends AbstractController
     /**
      * @Inject()
      * @var CalculatorServiceInterface
-     * 或者 @var CalculatorServiceConsumer
      */
     private $calcService;
 
     public function add()
     {
-        return $this->calcService->add(11, 22);
+        return $this->calcService->add(12, 56);
     }
 
     public function minus()
     {
-        return $this->calcService->minus(11, 22);
+        return $this->calcService->minus(23, 78);
     }
 
 }

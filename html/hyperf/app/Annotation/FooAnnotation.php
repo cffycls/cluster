@@ -1,15 +1,14 @@
 <?php
 namespace App\Annotation; //bug 注意大小写 *2
 
-use Hyperf\Di\Annotation\AbstractAnnotation as AbstractAnnotationAlias;
+use Hyperf\Di\Annotation\AbstractAnnotation;
 
 /**
  * <<4.>> 自定义注解
- * Class Foo
  * @Annotation
  * @Target({"CLASS","METHOD","PROPERTY"})
  */
-class FooAnnotation extends AbstractAnnotationAlias
+class FooAnnotation extends AbstractAnnotation
 {
     /**
      * @var string
