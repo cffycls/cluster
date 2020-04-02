@@ -4,7 +4,17 @@
 搭建集群环境脚本
 文章地址：https://segmentfault.com/u/canglangshui/articles 
 
-[更新]2019.01.06 15:09  
+[更新]2020.04.02 15:43  
+=======
+1、更新docker_php版本php7.4.4，更新swoole、event、memcached、redis扩展;  
+2、测试docker-slim缩减，无法启动；  
+3、标记环境192.168.1.111：  
+
+|-|-|  
+|port|www\|phpinfo.path|
+
+
+[更新]2020.01.06 15:09  
 =======
 1、更新docker_php版本，更新swoole，添加加Protobuf（rpc使用）扩展;
 
