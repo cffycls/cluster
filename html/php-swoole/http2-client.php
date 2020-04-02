@@ -1,4 +1,8 @@
 <?php
+/*
+ * Swoole网络编程: 单连接并发入门篇
+ * https://course.swoole-cloud.com/course-video/48
+ */
 
 \Swoole\Coroutine::create(function (){
 	$client = new Swoole\Coroutine\Http2\Client('127.0.0.1', 9501);
@@ -33,7 +37,6 @@
 });
 
 /**
-
 array (
 1 => 1,
 3 => 2,

@@ -1,25 +1,16 @@
-# php7.3.5; Feb 7, 2019 link: https://github.com/docker-library/php/blob/master/7.3/alpine3.9/fpm/Dockerfile
+# php7.3.5; Feb 7, 2019 link: https://github.com/docker-library/php/blob/master/7.4/alpine3.11/cli/Dockerfile
 # Base images 基础镜像+阿里源
 FROM alpine:3.11
 
 #MAINTAINER 维护者信息: +fileinfo
 MAINTAINER cffycls@foxmail.com
 
-# dependencies required for running "phpize"
-ENV PHP_VERSION 7.3.13
+# dependencies required for running "phpize" 2020.4.1组件更新
+ENV PHP_VERSION 7.4.4
 
 COPY packages /tmp
 ###
-# wget -O packages/php.tar.xz "https://secure.php.net/get/php-7.3.13.tar.xz/from/this/mirror &&\
-# wget -O packages/swoole.tar.gz "https://github.com/swoole/swoole-src/archive/master.tar.gz" && \
-# wget -O packages/inotify.tgz "https://pecl.php.net/get/inotify-2.0.0.tgz" && \
-# wget -O packages/redis.tgz "https://pecl.php.net/get/redis-5.0.0.tgz" && \
-# wget -O packages/libuuid.tgz "http://nchc.dl.sourceforge.net/project/libuuid/libuuid-1.0.3.tar.gz" && \
-# wget -O packages/uuid.tgz "http://pecl.php.net/get/uuid-1.0.4.tgz" && \
-# wget -O packages/memcached.tgz "https://pecl.php.net/get/memcached-3.1.3.tgz" && \
-# wget -O packages/event.tgz "http://pecl.php.net/get/event-2.5.3.tgz" && \
-# wget -O packages/imagemagick.tgz "https://www.imagemagick.org/download/ImageMagick.tar.gz" && \
-# wget -O packages/imagick.tgz "https://pecl.php.net/get/imagick-3.4.4.tgz"
+# download.sh
 ###
 RUN sed -i 's/dl-cdn.alpinelinux.org/mirrors.aliyun.com/g' /etc/apk/repositories \
     \
@@ -53,13 +44,16 @@ RUN sed -i 's/dl-cdn.alpinelinux.org/mirrors.aliyun.com/g' /etc/apk/repositories
        		openssl-dev \
        		sqlite-dev \
        		libjpeg-turbo-dev \
-       		libpng-dev \
-       		gd-dev \
+            libxpm-dev \
+           	gd-dev \
        		gettext-dev \
        		freetype-dev \
-       		libxpm-dev \
        		libevent-dev \
        		rabbitmq-c-dev \
+            pcre2-dev \
+## oniguruma: 安装php7.4的过程中，mbstring的正则表达式处理功能对这个包有依赖性
+            oniguruma \
+            oniguruma-dev \
        		" \
     && apk add --no-cache \
         curl \
@@ -76,37 +70,45 @@ RUN sed -i 's/dl-cdn.alpinelinux.org/mirrors.aliyun.com/g' /etc/apk/repositories
         --with-config-file-path="/usr/local/php/etc" \
         --with-config-file-scan-dir="/usr/local/php/etc/conf.d" \
         \
-        --enable-option-checking=fatal \
-        --with-mhash \
-        \
-        --enable-ftp \
-        --enable-exif \
-        --enable-mbregex \
         --enable-mbstring \
+        ## 正则表达式函数中多字节字符的支持
+        --enable-mbregex \
         --enable-mysqlnd \
         --enable-sysvmsg \
-        --enable-opcache \
+        --enable-ftp \
+        ## 操作图像元数据，配合gd
+        --enable-exif \
+        ## 信号处理的回调
         --enable-pcntl \
         --enable-sockets \
         --enable-sysvsem \
         --enable-xml \
+        ## 高精度运算的函数库
+        --enable-bcmath \
+        --with-openssl \
         --with-curl \
         --with-pdo-mysql \
+        ## 命令行交互的库
         --with-libedit \
-        --with-openssl \
         --with-zlib \
-        --with-pcre-regex \
+        ## pcre动态编译
+        --with-pcre-jit \
         --with-pear \
-        --with-libxml-dir=/usr \
-        --with-jpeg-dir \
-        --with-freetype-dir \
-        --with-xpm-dir \
-        --with-png-dir \
+        --with-libxml \
+        ## gd图片库
+        --enable-gd \
+        --with-jpeg \
+        --with-xpm \
+        --with-freetype \
+        ## 国际化语言扩展
         --with-gettext \
-        --with-mhash \
+        ## 字符集转换
         --with-iconv \
         \
-        --enable-fpm --with-fpm-user=www-data --with-fpm-group=www-data --disable-cgi \
+        --enable-fpm \
+        --with-fpm-user=www-data \
+        --with-fpm-group=www-data \
+        --disable-cgi \
     && make -j "$(nproc)" \
     && find -type f -name '*.a' -delete \
     && make install \
@@ -120,7 +122,7 @@ RUN sed -i 's/dl-cdn.alpinelinux.org/mirrors.aliyun.com/g' /etc/apk/repositories
 #测试 -- 需要对话参数，所以自定义安装
     \
     \
-	#swoole
+	# swoole
     && \
     mkdir -p ~/build/swoole && cd ~/build/swoole && \
     tar zxvf /tmp/swoole.tar.gz --strip-components 1 && \
@@ -139,7 +141,7 @@ RUN sed -i 's/dl-cdn.alpinelinux.org/mirrors.aliyun.com/g' /etc/apk/repositories
     cd ../ && rm -rf swoole \
 	\
 	\
-	#inotify 2.0.0
+	#inotify 2.+
     && \
     mkdir -p ~/build/inotify && cd ~/build/inotify && \
     tar -zxf /tmp/inotify.tgz --strip-components 1 && \
@@ -152,7 +154,7 @@ RUN sed -i 's/dl-cdn.alpinelinux.org/mirrors.aliyun.com/g' /etc/apk/repositories
     cd .. && rm -rf inotify \
 	\
 	\
-    #redis 5.0.0
+    #redis 5.+
     && \
     mkdir -p ~/build/redis && cd ~/build/redis && \
     tar -zxf /tmp/redis.tgz --strip-components 1 && \
@@ -181,7 +183,7 @@ RUN sed -i 's/dl-cdn.alpinelinux.org/mirrors.aliyun.com/g' /etc/apk/repositories
     cd ../ && rm -rf uuid \
     \
     \
-    #memcached 3.1.3 需要libmemcached
+    #memcached 3.+ 需要libmemcached
     && \
     apk add libmemcached-dev && \
     mkdir -p ~/build/memcached_p && cd ~/build/memcached_p && \
@@ -192,7 +194,7 @@ RUN sed -i 's/dl-cdn.alpinelinux.org/mirrors.aliyun.com/g' /etc/apk/repositories
     cd ../ && rm -rf memcached_p \
     \
     \
-    #event 2.5.3
+    #event 2.+
     && \
     mkdir -p ~/build/event && cd ~/build/event && \
     tar -zxf /tmp/event.tgz --strip-components 1 && \
@@ -215,7 +217,7 @@ RUN sed -i 's/dl-cdn.alpinelinux.org/mirrors.aliyun.com/g' /etc/apk/repositories
     #cd ../../ && rm -rf pthreads \
     #\
     \
-    # imagick-3.4.4 需要imagemagick
+    # imagick-3.+ 需要imagemagick
     && \
     mkdir -p ~/build/imagemagick && cd ~/build/imagemagick && \
     tar -zxf /tmp/imagemagick.tgz --strip-components 1 && \
@@ -234,7 +236,7 @@ RUN sed -i 's/dl-cdn.alpinelinux.org/mirrors.aliyun.com/g' /etc/apk/repositories
     \
 #======================================================================================================
     \
-    && ln -s /usr/local/php/bin/* /usr/local/bin && ln -s /usr/local/php/sbin/php-fpm /usr/local/bin \
+    && ln -s /usr/local/php/bin/* /usr/local/bin/ && ln -s /usr/local/php/sbin/php-fpm /usr/local/bin \
     && pecl channel-update pecl.php.net \
     && pecl install igbinary \
     && pecl install amqp \
@@ -246,4 +248,4 @@ RUN sed -i 's/dl-cdn.alpinelinux.org/mirrors.aliyun.com/g' /etc/apk/repositories
 
 EXPOSE 9000
 CMD ["php-fpm"]
-#docker build -t cffycls/php7 .
+#docker build -t cffycls/php . && docker-slim build cffycls/php

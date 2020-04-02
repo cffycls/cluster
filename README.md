@@ -10,8 +10,11 @@
 2、测试docker-slim缩减，无法启动；  
 3、标记环境192.168.1.111：  
 
-|-|-|  
-|port|www\|phpinfo.path|
+```
+port       www | phpinfo.path
+
+```
+
 
 
 [更新]2020.01.06 15:09  
