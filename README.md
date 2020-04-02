@@ -11,9 +11,9 @@
 3、标记环境192.168.1.111参数：  
 
 ```
-port       		host/phpinfo.path 							cluster
-8080/8082 		host:8080/a.php 							2nginx(n1,n2)+3php(权：p1,p2,p3)
-8084/8085 		host:8084/a.php | https://host:8085/a.php 	1nginx(限流：n3)+3php(权：p1,p2,p3)
+port       	host/phpinfo.path 							cluster
+8080/8082 	host:8080/a.php 							2nginx(n1,n2)+3php(权：p1,p2,p3)
+8084/8085 	host:8084/a.php | https://host:8085/a.php 		1nginx(限流：n3)+3php(权：p1,p2,p3)
 ```
 
 
