@@ -74,6 +74,8 @@ RUN sed -i 's/dl-cdn.alpinelinux.org/mirrors.aliyun.com/g' /etc/apk/repositories
         ## 正则表达式函数中多字节字符的支持
         --enable-mbregex \
         --enable-mysqlnd \
+        --with-mysqli \
+        --with-pdo-mysql \
         --enable-sysvmsg \
         --enable-ftp \
         ## 操作图像元数据，配合gd
@@ -87,7 +89,6 @@ RUN sed -i 's/dl-cdn.alpinelinux.org/mirrors.aliyun.com/g' /etc/apk/repositories
         --enable-bcmath \
         --with-openssl \
         --with-curl \
-        --with-pdo-mysql \
         ## 命令行交互的库
         --with-libedit \
         --with-zlib \

@@ -3,14 +3,14 @@ docker stop mm ms && docker rm mm ms
 
 docker run --name mm --restart=always -p 3307:3306 \
 	 --network=mybridge --ip=172.1.11.11 \
-	-v /home/wwwroot/cluster/mysql/data:/var/lib/mysql \
+	-v /home/wwwroot/cluster/mysql/data:/var/lib/mysql-files \
 	-v /home/wwwroot/cluster/mysql/config:/etc/mysql \
 	-e MYSQL_ROOT_PASSWORD=123456 \
 	-d mysql:8.0
 
 docker run --name ms --restart=always -p 3308:3306 \
 	 --network=mybridge --ip=172.1.11.12 \
-	-v /home/wwwroot/cluster/mysql_slave/data:/var/lib/mysql \
+	-v /home/wwwroot/cluster/mysql_slave/data:/var/lib/mysql-files \
 	-v /home/wwwroot/cluster/mysql_slave/config:/etc/mysql \
 	-e MYSQL_ROOT_PASSWORD=123456 \
 	-d mysql:8.0
