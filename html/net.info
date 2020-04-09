@@ -1,0 +1,101 @@
+[
+    {
+        "Name": "mybridge",
+        "Id": "78074c629854bf9126181253050eea0c3260c526963636aed505da229dbf1dc6",
+        "Created": "2020-04-02T14:51:18.117135029+08:00",
+        "Scope": "local",
+        "Driver": "bridge",
+        "EnableIPv6": false,
+        "IPAM": {
+            "Driver": "default",
+            "Options": {},
+            "Config": [
+                {
+                    "Subnet": "172.1.0.0/16",
+                    "Gateway": "172.1.0.1"
+                }
+            ]
+        },
+        "Internal": false,
+        "Attachable": false,
+        "Ingress": false,
+        "ConfigFrom": {
+            "Network": ""
+        },
+        "ConfigOnly": false,
+        "Containers": {
+            "0ac43ef7e80f89d161ae5beec57c725ef38a46c5a67265158aa115682068213e": {
+                "Name": "n2",
+                "EndpointID": "110552d25e720563688a638bed4a55789de911015c0062f65c43290750dab886",
+                "MacAddress": "02:42:ac:01:00:03",
+                "IPv4Address": "172.1.0.3/16",
+                "IPv6Address": ""
+            },
+            "4a6a6666de93a190fa6a94d323784809b2c1008ebec564b6a2fec86dadfd288a": {
+                "Name": "p2",
+                "EndpointID": "36ce86476e7f58a3cf12f73400cd1c514b4420fa72826bc907a9b35bd054c6c1",
+                "MacAddress": "02:42:ac:01:01:0c",
+                "IPv4Address": "172.1.1.12/16",
+                "IPv6Address": ""
+            },
+            "5dda4cb55a3929f73bb429b96d98540913c4c6637fdc455999902a5c8a768304": {
+                "Name": "p1",
+                "EndpointID": "13802f319f3466c59345d94a76ef162b7035e2beebb018f9db9c91549207a1f5",
+                "MacAddress": "02:42:ac:01:01:0b",
+                "IPv4Address": "172.1.1.11/16",
+                "IPv6Address": ""
+            },
+            "75912c32d9586560791da4f70d466313a1ed004a89fb664a41a73fd3b39d3296": {
+                "Name": "n3",
+                "EndpointID": "8761c9550ff41dd95324594e78fe3cbac22e25d3b76e7d4b59daa363f5a95ae5",
+                "MacAddress": "02:42:ac:01:00:04",
+                "IPv4Address": "172.1.0.4/16",
+                "IPv6Address": ""
+            },
+            "81d41aab979fa3db663c45ed3cb6853762ba42c0e58336d5a0016675d2222e70": {
+                "Name": "p3",
+                "EndpointID": "b8d10185c832b3860ba48e93fe60de41ef6569a695ab2b717ba6cbaad1cbf104",
+                "MacAddress": "02:42:ac:01:01:0d",
+                "IPv4Address": "172.1.1.13/16",
+                "IPv6Address": ""
+            },
+            "9f01fa2c8a3798097468aa29aa1b7f4176474dfe75ba50ce5e1e2fd3e55ccbd5": {
+                "Name": "mm",
+                "EndpointID": "37429022f6b80cbecda76fc5304723c94868e89f26f502dc8e2a475105a0adc4",
+                "MacAddress": "02:42:ac:01:0b:0b",
+                "IPv4Address": "172.1.11.11/16",
+                "IPv6Address": ""
+            },
+            "a1f9b4b55484d18293641d13a1dffd8051b16181f0e99ea42d7b40a26d3e1f33": {
+                "Name": "n1",
+                "EndpointID": "b655538f1ae37fbcfaee4e0b15a880bd0b39c115b19357c80f9bb035aa0dfef3",
+                "MacAddress": "02:42:ac:01:00:02",
+                "IPv4Address": "172.1.0.2/16",
+                "IPv6Address": ""
+            },
+            "aefc6c058a8a1ebac30713c7b117928a45f82b3a1c64f6f00d407c724d5a8418": {
+                "Name": "rm",
+                "EndpointID": "1aa4eb23951dd24f08621c4fd9aaa21fbdc95ca4dd4a1dfcbee39208340ded96",
+                "MacAddress": "02:42:ac:01:0d:0b",
+                "IPv4Address": "172.1.13.11/16",
+                "IPv6Address": ""
+            },
+            "c41bf8f9f8b4c97f97326c62dd9fef16d768537754082f1e7af76bce3fff3d84": {
+                "Name": "ms",
+                "EndpointID": "43246367dacbb2409712df53c76dcfee2caf906cf6339d6945f6b3e62492aa77",
+                "MacAddress": "02:42:ac:01:0b:0c",
+                "IPv4Address": "172.1.11.12/16",
+                "IPv6Address": ""
+            },
+            "f23f17fad098f4fce05b2598ea3d5adae6e37b9a9d034efcdd55c6139d18b9dc": {
+                "Name": "rs",
+                "EndpointID": "b049e89f5c5bdb2aa8221c80d8dd2c2f1e39fa883d2d5fce142426732bf866a9",
+                "MacAddress": "02:42:ac:01:0d:0c",
+                "IPv4Address": "172.1.13.12/16",
+                "IPv6Address": ""
+            }
+        },
+        "Options": {},
+        "Labels": {}
+    }
+]

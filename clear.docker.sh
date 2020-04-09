@@ -16,7 +16,7 @@
 #ocker rmi $(docker images | grep "none" | awk '{print $3}')
 
 #6、自动清理命令
-docker system prune -y
+docker system prune 
 <<COMMENT
 可对空间进行自动清理。
 该命令所清理的对象如下：
