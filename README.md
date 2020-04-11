@@ -4,6 +4,11 @@
 搭建集群环境脚本
 文章地址：https://segmentfault.com/u/canglangshui/articles 
 
+[更新]2020.04.11 15:09  
+=======
+1、更新docker_php指定版本php7.3.16，去除imagick，添加sdebug(xdebug)、swoole-tracker扩展;  
+2、启动hyperf测试swoole-tracker调用：  
+
 [更新]2020.04.02 15:43  
 =======
 1、更新docker_php版本php7.4.4，更新swoole、event、memcached、redis扩展;  
