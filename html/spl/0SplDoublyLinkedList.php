@@ -99,3 +99,4 @@ while($links->valid()){
 	$links->next();
 }
 echo PHP_EOL, $links->getIteratorMode();
+//0

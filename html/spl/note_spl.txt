@@ -1,4 +1,4 @@
-1、SplDoublyLinkedList.0|SplQueue.4|SplStack.6
+SplDoublyLinkedList.0|SplQueue.4|SplStack.6
 1、类的关系
 class SplDoublyLinkedList implements Iterator, Countable, ArrayAccess, Serializable {
   -add($index, $newval)
@@ -29,12 +29,12 @@ class SplDoublyLinkedList implements Iterator, Countable, ArrayAccess, Serializa
 ```
 There are two orthogonal sets of modes that can be set:
 ◦ The direction of the iteration 迭代的方向(either one or the other):
- ◦SplDoublyLinkedList::IT_MODE_LIFO (Stack style)
- ◦SplDoublyLinkedList::IT_MODE_FIFO (Queue style)
+ ◦SplDoublyLinkedList::IT_MODE_LIFO (Stack style) 2
+ ◦SplDoublyLinkedList::IT_MODE_FIFO (Queue style) 0
 
 ◦ The behavior of the iterator 迭代器的行为(either one or the other):
- ◦SplDoublyLinkedList::IT_MODE_DELETE (Elements are deleted by the iterator)
- ◦SplDoublyLinkedList::IT_MODE_KEEP (Elements are traversed by the iterator)
+ ◦SplDoublyLinkedList::IT_MODE_DELETE (Elements are deleted by the iterator 元素被迭代器删除) 1
+ ◦SplDoublyLinkedList::IT_MODE_KEEP (Elements are traversed by the iterator 元素由迭代器遍历) 0
 
 The default mode is: SplDoublyLinkedList::IT_MODE_FIFO | SplDoublyLinkedList::IT_MODE_KEEP
 ```
@@ -42,11 +42,15 @@ The default mode is: SplDoublyLinkedList::IT_MODE_FIFO | SplDoublyLinkedList::IT
 Iteration Direction
 SplDoublyLinkedList::IT_MODE_LIFO
     The list will be iterated in a last in, first out order, like a stack.
-    该列表将按“最后入，先出”的顺序迭代，就像堆栈一样。
+    该列表将按“最后入，先出”的顺序迭代，就像栈一样。  [First in, First out.先进先出]
 SplDoublyLinkedList::IT_MODE_FIFO
     The list will be iterated in a first in, first out order, like a queue.
-    该列表将按照先入先出的顺序迭代，就像队列一样.
+    该列表将按照先入先出的顺序迭代，就像队列一样. [LIFO: Last in, First out.后进先出]
 
+const IT_MODE_LIFO = 2;
+const IT_MODE_FIFO = 0;
+const IT_MODE_DELETE = 1;
+const IT_MODE_KEEP = 0;
 ```
 
 class SplQueue extends SplDoublyLinkedList {
@@ -56,6 +60,15 @@ class SplQueue extends SplDoublyLinkedList {
 class SplStack extends SplDoublyLinkedList {
   -esetIteratorMode($mode)                                 --设置迭代模式（方向）
 }
+上面来自关联接口：phpstorm//stubs/SPL/SPL_c1.php 和php官网。
+
+从C++学习基础归来，可以看到：系统分配堆、先进后出，自定义new栈、随进随出【先入必先出、不然找不到；并且执行段结束了】。
+即堆[Slack]是系统指定的逆序列，堆[Heap]是随进随出的正序列。
+
+#异同：
+rewind()、next()、prev() ==> 双链表和queue是start在上、slack在下
+top\bottom\add\push\pop等相同
+
 
 2、堆[自动排序]
 abstract class SplHeap implements Iterator, Countable {
