@@ -39,7 +39,7 @@ if (DIRECTORY_SEPARATOR == '/'){
 	//system比exec
 	$sysOutput = system($cmd, $statusCode);
 	var_dump($sysOutput, $statusCode);
-	$lastline = exec($cmd, $sysOutput, $statusCode);
+	$lastLine = exec($cmd, $sysOutput, $statusCode);
 	var_dump($sysOutput, $statusCode);
 	$sysOutput = shell_exec($cmd);
 	var_dump($sysOutput);

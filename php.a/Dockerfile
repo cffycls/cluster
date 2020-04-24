@@ -243,6 +243,7 @@ RUN sed -i 's/dl-cdn.alpinelinux.org/mirrors.aliyun.com/g' /etc/apk/repositories
     && pecl install amqp \
     && pecl install apcu \
     && pecl install protobuf \
+##    && pecl upgrade-all \
     && rm -rf /tmp/* ~/.pearrc ~/build \
     && apk del $PHPIZE_DEPS \
     && php -m

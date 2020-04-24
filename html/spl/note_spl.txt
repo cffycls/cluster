@@ -1,0 +1,76 @@
+1、SplDoublyLinkedList.0|SplQueue.4|SplStack.6
+1、类的关系
+class SplDoublyLinkedList implements Iterator, Countable, ArrayAccess, Serializable {
+  -add($index, $newval)
+  -push($value)/pop()                                --尾部 +-end
+  -unshift($value)/shifts()                          --顶部 +-beginning
+  -top()                                             --尾部 end
+  -bottom()                                          --开头 beginning
+  -count()
+  -isEmpty()
+  -setIteratorMode($mode)
+  -getIteratorMode()
+  -offsetExists($index)
+  -offsetGet($index)
+  -offsetSet($index, $newval)
+  -offsetUnset($index)                                --删除指定索引，并重新连接[排序]
+  -rewind()                                           --back to the start
+  -current()
+  -key()                                              --current的index
+  -next()
+  -prev()
+  -valid()
+  -serialize()
+  -unserialize(string $serialized)
+  -__serialize()
+  -__unserialize(array $data)
+}
+### [SplDoublyLinkedList::setIteratorMode](https://www.php.net/manual/en/spldoublylinkedlist.setiteratormode.php) 参数：
+```
+There are two orthogonal sets of modes that can be set:
+◦ The direction of the iteration 迭代的方向(either one or the other):
+ ◦SplDoublyLinkedList::IT_MODE_LIFO (Stack style)
+ ◦SplDoublyLinkedList::IT_MODE_FIFO (Queue style)
+
+◦ The behavior of the iterator 迭代器的行为(either one or the other):
+ ◦SplDoublyLinkedList::IT_MODE_DELETE (Elements are deleted by the iterator)
+ ◦SplDoublyLinkedList::IT_MODE_KEEP (Elements are traversed by the iterator)
+
+The default mode is: SplDoublyLinkedList::IT_MODE_FIFO | SplDoublyLinkedList::IT_MODE_KEEP
+```
+```
+Iteration Direction
+SplDoublyLinkedList::IT_MODE_LIFO
+    The list will be iterated in a last in, first out order, like a stack.
+    该列表将按“最后入，先出”的顺序迭代，就像堆栈一样。
+SplDoublyLinkedList::IT_MODE_FIFO
+    The list will be iterated in a first in, first out order, like a queue.
+    该列表将按照先入先出的顺序迭代，就像队列一样.
+
+```
+
+class SplQueue extends SplDoublyLinkedList {
+  -enqueue($value)                                        --入列 add to queue
+  -dequeue()                                              --出列 dequeue a node
+}
+class SplStack extends SplDoublyLinkedList {
+  -esetIteratorMode($mode)                                 --设置迭代模式（方向）
+}
+
+2、堆[自动排序]
+abstract class SplHeap implements Iterator, Countable {
+    public function extract () {}                           --末端删除并返回
+    public function insert ($value) {}
+    public function top () {}                               --查看顶部
+    public function count () {}
+    public function isEmpty () {}
+    public function rewind () {}                            --to the beginning
+    public function current () {}
+    public function key () {}
+    public function next () {}
+    public function valid () {}
+    public function recoverFromCorruption () {}         --Recover from the corrupted state and allow further actions on the heap
+    //在SplHeap中抛出异常::compare()取消堆并将其置于阻塞状态。您可以通过调用SplHeap::recoverFromCorruption()来解除阻塞。然而，有些元素可能放置不正确，这可能会破坏堆属性。
+    abstract protected function compare ($value1, $value2);
+    public function isCorrupted(){}
+}

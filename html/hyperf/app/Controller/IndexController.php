@@ -12,6 +12,12 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
+use Hyperf\HttpServer\Annotation\AutoController;
+
+/**
+ * Class IndexController
+ * @AutoController()
+ */
 class IndexController extends AbstractController
 {
     public function index()
@@ -23,5 +29,17 @@ class IndexController extends AbstractController
             'method' => $method,
             'message' => "Hello {$user}.",
         ];
+    }
+    /*
+     *
+     */
+    public function a()
+    {
+	    ob_start();
+	    phpinfo();
+	    $var = ob_get_contents();
+	    ob_end_clean();
+
+        return $var;
     }
 }
