@@ -1,7 +1,7 @@
 #!/bin/bash
 #2020.4.1
 
-wget -O packages/php.tar.xz "https://secure.php.net/get/php-7.4.4.tar.xz/from/this/mirror" && \
+wget -O packages/php.tar.xz "https://secure.php.net/get/php-7.4.5.tar.xz/from/this/mirror" && \
 	wget -O packages/swoole.tar.gz "https://github.com/swoole/swoole-src/archive/master.tar.gz" && \
 	wget -O packages/inotify.tgz "https://pecl.php.net/get/inotify-2.0.0.tgz" && \
 	wget -O packages/redis.tgz "https://pecl.php.net/get/redis-5.2.1.tgz" && \

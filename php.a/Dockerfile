@@ -5,8 +5,8 @@ FROM alpine:3.11
 #MAINTAINER 维护者信息: +fileinfo
 MAINTAINER cffycls@foxmail.com
 
-# dependencies required for running "phpize" 2020.4.1组件更新
-ENV PHP_VERSION 7.4.4
+# dependencies required for running "phpize" 2020.4.26组件更新
+ENV PHP_VERSION 7.4.5
 
 COPY packages /tmp
 ###
@@ -217,21 +217,21 @@ RUN sed -i 's/dl-cdn.alpinelinux.org/mirrors.aliyun.com/g' /etc/apk/repositories
     #make && make install && \
     #cd ../../ && rm -rf pthreads \
     #\
-    \
+    #\
     # imagick-3.+ 需要imagemagick
-    && \
-    mkdir -p ~/build/imagemagick && cd ~/build/imagemagick && \
-    tar -zxf /tmp/imagemagick.tgz --strip-components 1 && \
-    ./configure && \
-    make && make install && \
-    cd ../ && rm -rf imagemagick && \
-    \
-    mkdir -p ~/build/imagick && cd ~/build/imagick && \
-    tar -zxf /tmp/imagick.tgz --strip-components 1 && \
-    /usr/local/php/bin/phpize && \
-    ./configure --with-php-config=/usr/local/php/bin/php-config && \
-    make && make install && \
-    cd ../ && rm -rf imagick \
+    #&& \
+    #mkdir -p ~/build/imagemagick && cd ~/build/imagemagick && \
+    #tar -zxf /tmp/imagemagick.tgz --strip-components 1 && \
+    #./configure && \
+    #make && make install && \
+    #cd ../ && rm -rf imagemagick && \
+    #\
+    #mkdir -p ~/build/imagick && cd ~/build/imagick && \
+    #tar -zxf /tmp/imagick.tgz --strip-components 1 && \
+    #/usr/local/php/bin/phpize && \
+    #./configure --with-php-config=/usr/local/php/bin/php-config && \
+    #make && make install && \
+    #cd ../ && rm -rf imagick \
     \
 #======================================================================================================
     \
@@ -243,7 +243,7 @@ RUN sed -i 's/dl-cdn.alpinelinux.org/mirrors.aliyun.com/g' /etc/apk/repositories
     && pecl install amqp \
     && pecl install apcu \
     && pecl install protobuf \
-##    && pecl upgrade-all \
+    #&& pecl upgrade-all \
     && rm -rf /tmp/* ~/.pearrc ~/build \
     && apk del $PHPIZE_DEPS \
     && php -m
