@@ -1,0 +1,13 @@
+.*
+openresty.a/logs/
+openresty.b/logs/
+redis/data/
+redis_slave/data/
+html/seckill/
+ngx_lua_waf/
+rabbitmq/data*
+mysql/data/*
+mysql_slave/data/*
+html/laravel/
+html/phpMyAdmin/
+golang/
