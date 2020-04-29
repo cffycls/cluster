@@ -11,3 +11,9 @@ mysql_slave/data/*
 html/laravel/
 html/phpMyAdmin/
 golang/
+cluster_redis/6391/data/*
+cluster_redis/6392/data/*
+cluster_redis/6393/data/*
+cluster_redis/6394/data/*
+cluster_redis/6395/data/*
+cluster_redis/6396/data/*

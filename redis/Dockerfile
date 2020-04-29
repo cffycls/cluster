@@ -15,7 +15,7 @@ RUN apk add --no-cache \
 		'su-exec>=0.2' \
 		tzdata
 
-ENV REDIS_VERSION 5.0.7
+ENV REDIS_VERSION 5.0.8
 ENV REDIS_DOWNLOAD_URL http://download.redis.io/releases/redis-$REDIS_VERSION.tar.gz
 
 ENV REDIS_DEPS 'coreutils gcc linux-headers make musl-dev'
@@ -23,7 +23,8 @@ ENV REDIS_DEPS 'coreutils gcc linux-headers make musl-dev'
 COPY redis-$REDIS_VERSION.tar.gz /tmp/redis.tar.gz
 RUN set -ex; \
 	\
-	apk add $REDIS_DEPS \
+    apk update \
+	&& apk add $REDIS_DEPS \
 	\
 	&& cd /tmp && mkdir -p /usr/src/redis \
     # 下载过慢
@@ -35,13 +36,13 @@ RUN set -ex; \
         && mv /usr/src/redis/src/redis-trib.rb /bin && chmod +x /bin/redis-trib.rb \
 	&& rm -r /usr/src/redis \
 	&& apk del $REDIS_DEPS \
+    && mkdir /data && mkdir /sentinel \
 	\
         && ln -sf /usr/share/zoneinfo/Asia/Shanghai /etc/localtime \
         && echo "Asia/Shanghai" > /etc/timezone \
 	&& redis-server --version
 
-RUN mkdir /data && chown redis:redis /data
-#VOLUME ["/data", "/etc/redis/redis.conf"]
-
 EXPOSE 6379
+EXPOSE 16379
 CMD ["redis-server","/etc/redis/redis.conf"]
+# docker build -t cffycls/redis .

@@ -13,7 +13,7 @@ $son = 'children';
 foreach ($data as $item) {
     $tmpMap[$item[$id]] = $item;
 }
-foreach ($data as $item) {
+foreach ($data as $item) { //引用使用--经典
     if (isset($tmpMap[$item[$pid]])) {
         //把父子结构转换引用成地址，准备据完成后，输出时即是所需数据
         $tmpMap[$item[$id]]['level'] = $tmpMap[$item[$pid]]['level']>0 ? ($tmpMap[$item[$pid]]['level']+1) : 0;

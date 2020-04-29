@@ -1,4 +1,5 @@
 SplDoublyLinkedList.0|SplQueue.4|SplStack.6
+
 1、类的关系
 class SplDoublyLinkedList implements Iterator, Countable, ArrayAccess, Serializable {
   -add($index, $newval)

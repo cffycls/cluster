@@ -22,6 +22,14 @@ port       	host/phpinfo.path 					cluster
 ```
 
 
+[更新]2020.04.29 20:47  
+=======
+1、更新redis_cluster部分，测试注释源码，修改 cluster-announce-ip 为容器ip: 172.1.30.11解决一建集群的问题；
+
+[更新]2020.04.28 11:04  
+=======
+1、更新ignotify同步；
+
 [更新]2020.01.06 15:09  
 =======
 1、更新docker_php版本，更新swoole，添加加Protobuf（rpc使用）扩展;
