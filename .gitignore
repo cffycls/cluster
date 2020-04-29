@@ -8,6 +8,7 @@ ngx_lua_waf/
 rabbitmq/data*
 mysql/data/*
 mysql_slave/data/*
+html/hyperf/
 html/laravel/
 html/phpMyAdmin/
 golang/
