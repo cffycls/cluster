@@ -24,7 +24,8 @@ port       	host/phpinfo.path 					cluster
 
 [更新]2020.04.29 20:47  
 =======
-1、更新redis_cluster部分，测试注释源码，修改 cluster-announce-ip 为容器ip: 172.1.30.11解决一建集群的问题；
+1、更新redis_cluster部分5.0.8，测试注释源码，修改 cluster-announce-ip 为容器ip: 172.1.30.11解决一建集群的问题；
+2、腾讯开发者手册：https://cloud.tencent.com/developer/section/1374001；  
 
 [更新]2020.04.28 11:04  
 =======
