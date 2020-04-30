@@ -58,5 +58,12 @@ $data = array_merge_recursive(['session_id'=>session_id()], $user, $serverInfo);
 print_r($data);
 
 $sess = parse_url(ini_get("session.save_path"));
-print_r("session.save_path: " .$sess['host'] .":" .$sess['port']);
+print_r("session.save_path: " .$sess['host'] .":" .$sess['port'] .PHP_EOL);
 
+/*
+//测试phpmyadmin
+print_r("session.id: " .session_id() .PHP_EOL);
+//session_regenerate_id(true); //无、notice、Fatal error
+session_regenerate_id(); //无、notice、Fatal error
+print_r("session.id: " .session_id());
+*/
