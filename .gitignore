@@ -1,4 +1,5 @@
 .*
+*.log
 openresty.a/logs/
 openresty.b/logs/
 redis/data/

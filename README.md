@@ -5,8 +5,11 @@
 文章地址：https://segmentfault.com/u/canglangshui/articles 
 
 
+[更新]2020.05.01 16:12  
+1、更新 docker:cffycls/net->buster添加pt-query-digest工具；
+2、测试修改防火墙配置，添加 backup.mysql.sh ；
+
 [更新]2020.04.29 20:47  
-=======
 1、更新redis_cluster部分5.0.8，测试注释源码，合并配置引用；
 ```markdown
 cluster-announce-ip 172.1.30.11 //修改为容器ip解决一建集群的问题
@@ -15,16 +18,13 @@ cluster-announce-ip 172.1.30.11 //修改为容器ip解决一建集群的问题
 3、合并php集群配置引用，更新swoole、php本；
 
 [更新]2020.04.28 11:04  
-=======
 1、添加 ignotify + rsync 手动同步代码；
 
 [更新]2020.04.11 15:09  
-=======
 1、更新docker_php指定版本php7.3.16，去除imagick，添加sdebug(xdebug)、swoole-tracker扩展;  
 2、启动hyperf测试swoole-tracker调用：  
 
 [更新]2020.04.02 15:43  
-=======
 1、更新docker_php版本php7.4.4，更新swoole、event、memcached、redis扩展;  
 2、测试docker-slim缩减，无法启动；  
 3、标记环境192.168.1.111参数：  

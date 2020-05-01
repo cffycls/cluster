@@ -1,6 +1,9 @@
-  
-MongoDB基本的角色  
-  
+MongoDB
+====
+
+基本的角色  
+----
+```markdown
 1.数据库用户角色：read、readWrite;  
 2.数据库管理角色：dbAdmin、dbOwner、userAdmin；  
 3.集群管理角色：clusterAdmin、clusterManager、clusterMonitor、hostManager；  
@@ -9,9 +12,8 @@ MongoDB基本的角色
 6.超级用户角色：root   
 //这里还有几个角色间接或直接提供了系统超级用户的访问（dbOwner 、userAdmin、userAdminAnyDatabase）  
   
-   其中MongoDB默认是没有开启用户认证的，也就是说游客也拥有超级管理员的权限。userAdminAnyDatabase：有分配角色和用户的权限，但没有查写的权限  
----------------------------------------------------------------------------  
----------------------------------------------------------------------------  
+```
+其中MongoDB默认是没有开启用户认证的，也就是说游客也拥有超级管理员的权限。userAdminAnyDatabase：有分配角色和用户的权限，但没有查写的权限  
   
 #1. 创建用户  
 # 增  

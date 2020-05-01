@@ -1,6 +1,8 @@
 SplDoublyLinkedList.0|SplQueue.4|SplStack.6
-
+====
 1、类的关系
+----
+```markdown
 class SplDoublyLinkedList implements Iterator, Countable, ArrayAccess, Serializable {
   -add($index, $newval)
   -push($value)/pop()                                --尾部 +-end
@@ -26,6 +28,7 @@ class SplDoublyLinkedList implements Iterator, Countable, ArrayAccess, Serializa
   -__serialize()
   -__unserialize(array $data)
 }
+```
 ### [SplDoublyLinkedList::setIteratorMode](https://www.php.net/manual/en/spldoublylinkedlist.setiteratormode.php) 参数：
 ```
 There are two orthogonal sets of modes that can be set:
@@ -39,6 +42,7 @@ There are two orthogonal sets of modes that can be set:
 
 The default mode is: SplDoublyLinkedList::IT_MODE_FIFO | SplDoublyLinkedList::IT_MODE_KEEP
 ```
+参数
 ```
 Iteration Direction
 SplDoublyLinkedList::IT_MODE_LIFO
@@ -53,7 +57,7 @@ const IT_MODE_FIFO = 0;
 const IT_MODE_DELETE = 1;
 const IT_MODE_KEEP = 0;
 ```
-
+```markdown
 class SplQueue extends SplDoublyLinkedList {
   -enqueue($value)                                        --入列 add to queue
   -dequeue()                                              --出列 dequeue a node
@@ -61,6 +65,7 @@ class SplQueue extends SplDoublyLinkedList {
 class SplStack extends SplDoublyLinkedList {
   -esetIteratorMode($mode)                                 --设置迭代模式（方向）
 }
+```
 上面来自关联接口：phpstorm//stubs/SPL/SPL_c1.php 和php官网。
 
 从C++学习基础归来，可以看到：系统分配堆、先进后出，自定义new栈、随进随出【先入必先出、不然找不到；并且执行段结束了】。
@@ -72,6 +77,8 @@ top\bottom\add\push\pop等相同
 
 
 2、堆[自动排序]
+----
+```markdown
 abstract class SplHeap implements Iterator, Countable {
     public function extract () {}                           --末端删除并返回
     public function insert ($value) {}
@@ -88,3 +95,4 @@ abstract class SplHeap implements Iterator, Countable {
     abstract protected function compare ($value1, $value2);
     public function isCorrupted(){}
 }
+```

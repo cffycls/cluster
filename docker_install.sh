@@ -12,3 +12,4 @@ apt-get update && apt-get install docker-ce -y
 
 
 docker network create mybridge --subnet=172.1.0.0/16
+docker network create others --subnet=111.0.0.0/8
