@@ -19,3 +19,5 @@ cluster_redis/6393/data/*
 cluster_redis/6394/data/*
 cluster_redis/6395/data/*
 cluster_redis/6396/data/*
+consul/data.s
+consul/data.c
