@@ -23,22 +23,22 @@ backup() {
   fi
   echo "处理 mm_array:"
   for i in ${mm_array[*]} ; do
-      rm -rf mm/$i ms/$i
-      if [ -d ../mysql/data/$i ]; then
+      rm -rf mm/$i
+      if [ -e ../mysql/data/$i ]; then
           echo "cp -r ../mysql/data/${i} mm/"
           cp -r ../mysql/data/$i mm/
       fi
   done
-  /usr/bin/tree
+  #/usr/bin/tree
   echo "处理 ms_array:"
   for i in ${ms_array[*]} ; do
-      rm -rf mm/$i ms/$i
-      if [ -d ../mysql_slave/data/$i ]; then
+      rm -rf ms/$i
+      if [ -e ../mysql_slave/data/$i ]; then
           echo "cp -r ../mysql_slave/data/${i} mm/"
           cp -r ../mysql_slave/data/$i mm/
       fi
   done
-  /usr/bin/tree
+  #/usr/bin/tree
 }
 
 restore() {
@@ -49,14 +49,14 @@ restore() {
 
   echo "还原 mm_array:"
   for(( i=0;i<${#mm_array[@]};i++)) ; do
-      if [ -d mm/$i ]; then
+      if [ -e mm/$i ]; then
           echo "cp -rf mm/${i} ../mysql/data/"
           cp -rf mm/$i ../mysql/data/
       fi
   done
   echo "还原 ms_array:"
   for(( i=0;i<${#ms_array[@]};i++)) ; do
-      if [ -d ms/$i ]; then
+      if [ -e ms/$i ]; then
           echo "cp -rf ms/${i} ../mysql_slave/data/"
           cp -rf ms/$i ../mysql_slave/data/
       fi
@@ -74,6 +74,7 @@ else
   echo "start backup..."
   backup
   #docker start mm ms
+  /usr/bin/tree
 fi
 
 echo "All Done"

@@ -1,13 +1,14 @@
 # cluster
-2019-06-26 14:09:01创建  
+2019-06-26 14:09创建  
   
 搭建集群环境脚本
 文章地址：https://segmentfault.com/u/canglangshui/articles 
 
 
 [更新]2020.05.01 16:12  
-1、更新 docker:cffycls/net->buster添加pt-query-digest工具；
-2、测试修改防火墙配置，添加 backup.mysql.sh ；
+1、更新 docker:cffycls/net->buster添加pt-query-digest工具；  
+2、测试修改防火墙配置，添加 backup.mysql.sh ，修复MySQL映射目录的不一致；  
+3、修改子目录txt文件为readme.md；  
 
 [更新]2020.04.29 20:47  
 1、更新redis_cluster部分5.0.8，测试注释源码，合并配置引用；

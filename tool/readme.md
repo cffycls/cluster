@@ -60,19 +60,95 @@ nc -vz -w2 192.168.1.112 10-100 //10-100的端口
 [MySQL慢查询分析工具pt-query-digest详解](https://blog.csdn.net/xiaoweite1/article/details/80299754)
 ```markdown
 4.各工具用法简介（详细内容：https://www.percona.com/doc/percona-toolkit/2.2/index.html）
-(1)慢查询日志分析统计
-pt-query-digest /usr/local/mysql/data/slow.log
+(1)慢查询日志分析统计(需要 sql.log 文件的读取)
+pt-query-digest /home/wwwroot/cluster/mysql/data/slow.log  
 (2)服务器摘要
 pt-summary 
 (3)服务器磁盘监测
 pt-diskstats 
 (4)mysql服务状态摘要
-pt-mysql-summary -- --user=root --password=root 
+pt-mysql-summary --host 172.1.11.11 --user=root --password=123456 
 ```
-由于pt工具使用需要本地 sql.log 文件的读取，所以要对不同容器的日志文件进行映射测试。
 
+所以要对不同容器的日志文件进行映射测试。开启：
+```markdown
+# slow_log(慢日志)，并注意目录映射
+slow_query_log=1 #开启慢日志开关
+slow_query_log_file=/var/lib/mysql/slow.log #定义日志位置和名字
+long_query_time=0.5 #定义慢查询时间阈值，超过0.1s的语句记录慢日志
+log_queries_not_using_indexes #没走索引的查询，记录慢日志
+```
 
 ```markdown
-fping -a[--alive] -f[ --file FILE] -g[--generate生成字符串、域列表]
-fping -a -g 192.168.1.0/16
+# tool.sh 添加映射目录：
+-v /home/wwwroot/cluster/mysql/data/:/mysql_files/  
+
+pt-query-digest /mysql_files/slow.log 
+```
+5、PMM 监控 MySQL
+----
+```markdown
+###本地主机 VM-deepin:
+# 1.下载PMM Server Docker镜像
+docker create -v /opt/prometheus/data -v /opt/consul-data -v /var/lib/mysql -v /var/lib/grafana --name pmm-data percona/pmm-server /bin/true
+# 2.启动 pmm-server
+docker run -d -p 9600:80 --network=others --ip=111.222.222.222 --volumes-from pmm-data --name pmm-server --restart=always percona/pmm-server
+# 3.浏览器访问
+http://192.168.1.111:9600/ //admin--admin
+
+###docker容器 tool： 111.111.111.111:
+# 4.安装pmm-client客户端
+https://www.percona.com/downloads/pmm/1.17.3/binary/tarball/pmm-client-1.17.3.tar.gz
+tar -zxvf pmm-client-1.17.3.tar.gz && cd pmm-client-1.17.3 && ./install
+# 5.连接PMM Server
+pmm-admin config --server 111.222.222.222 
+#pmm-admin --help： pmm-admin list; pmm-admin repair; pmm-admin check-network; pmm-admin remove mysql
+OK, PMM server is alive. 
+PMM Server      | 111.222.222.222 
+Client Name     | 0d17abcb826e
+Client Address  | 111.111.111.111 
+pmm-admin config --client 172.1.11.11 --client-name mysql8.mm
+# 6.添加mysql监控
+pmm-admin add mysql --user root --password 123456 --host 172.1.11.11 --port 3306
+docker network connect mybridge tool --ip 172.1.111.111 
+docker network connect mybridge pmm-server --ip 172.1.222.222
+#docker network connect --help
+#docker network disconnect mybridge tool
+[mysql:queries] Error adding MySQL queries: "service" failed: exit status 1  #repair; /var/log/pmm-*.log等各种错误
+# 7.总之 pmm-admin list 连接错误，改变客户端环境
+[返回]本地主机 VM-deepin:
+重复 6. : pmm-admin add mysql --user root --password 123456 --host 172.1.11.11 --port 3306
+感动：
+[mysql:queries] OK, now monitoring MySQL queries from perfschema using DSN root:***@tcp(172.1.11.11:3306)
+```
+```markdown
+# 其它，命令学习
+route -n
+route add -net 172.1.0.0/16 gw 172.1.0.1 eth0
+route add -host 172.1.111.111 gw 172.1.0.1
+```
+小结：
+```markdown
+1、问题解决过程
+a. pmm-client（以下pc）环境问题没有被明确，但是可以从过程：
+    [tool:111.111.111.111] 的 /var/log/pmm-*.log 看到结尾日志
+/var/log/pmm-linux-metrics-42000.log:
+level=info msg="Starting HTTPS server for https://111.111.111.111:42000/metrics ..." source="server.go:106"
+/var/log/pmm-mysql-metrics-42002.log:
+level=fatal msg="listen tcp 111.111.111.111:42002: bind: address already in use" source="mysqld_exporter.go:459"
+    端口正常.莫名的问题，在这里查询多个网络部署实例无果，一大抄。感觉应该是环境问题。
+b. 变换环境部署测试 
+    1）先是把pc安装到mysql服务端本地（mm:172.1.11.11:3306），容器内命令测试，无差别。
+    2）安装到本地主机 VM-deepin ,直接通过了:
+环境总结: docker.pmm-data + docker.pmm-server[111.222.222.222: 外9600映射:80; 访问:http://192.168.1.111:9600/] 
+    + docker.mysql[172.1.11.11: 无外:3306] + deepin主机[192.168.1.111] 
+c.http: TLS handshake error from 192.168.1.111:58980: tls: first record does not look like a TLS handshake
+
+pmm-admin config --server 192.168.1.111:9600  
+pmm-admin config --bind-address 192.168.1.111 --client-address 192.168.1.111
+pmm-admin add mysql --user root --password 123456 --host 172.1.11.11 --port 3306
+iptables -I INPUT -p tcp  -m multiport --dports 42000,42002 -j ACCEPT
+pmm-admin check-network
+ok
+ip地址bind-address能替换回去?，官方无配置文档，测试略
 ```

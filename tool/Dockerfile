@@ -22,7 +22,8 @@ deb-src http://mirrors.ustc.edu.cn/debian/ buster-updates main \n\
  \n\
 deb http://mirrors.ustc.edu.cn/debian/ buster-backports main non-free contrib \n\
 deb-src http://mirrors.ustc.edu.cn/debian/ buster-backports main non-free contrib \n\
-"  > /etc/apt/sources.list && cat /etc/apt/sources.list && apt-get update
+"  > /etc/apt/sources.list && cat /etc/apt/sources.list && apt-get update \
+    && apt update && apt list --upgradable
 
 # --assume-yes apt-utils 默认是
 RUN apt-get install --assume-yes apt-utils \
@@ -41,8 +42,8 @@ RUN apt-get install --assume-yes apt-utils \
     && ./configure && make && make install \
     && cd .. && rm -rf hping-master && hping -v
 
-RUN apt-get install --assume-yes percona-toolkit \
-    && pt-query-digest --version
+RUN apt-get install --assume-yes percona-toolkit pmm-client mariadb-client \
+    && pt-query-digest --version && mysql -V
 
 #    && apt --fix-broken install && apt-get install percona-toolkit -y \
 # docker build -t cffycls/buster .
