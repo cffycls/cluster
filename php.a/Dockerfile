@@ -8,7 +8,7 @@ MAINTAINER cffycls@foxmail.com
 # dependencies required for running "phpize" 2020.4.26组件更新
 ENV PHP_VERSION 7.4.5
 
-COPY packages /tmp
+COPY packages/ /tmp
 ###
 # download.sh
 ###
@@ -130,12 +130,9 @@ RUN sed -i 's/dl-cdn.alpinelinux.org/mirrors.aliyun.com/g' /etc/apk/repositories
     /usr/local/php/bin/phpize && \
     ./configure \
         --with-php-config=/usr/local/php/bin/php-config \
-		--enable-coroutine \
 		--enable-openssl  \
 		--enable-http2  \
-		--enable-async-redis \
 		--enable-sockets \
-		--enable-mysqlnd \
 		&& \
 	\
     make && make install && \
@@ -143,71 +140,71 @@ RUN sed -i 's/dl-cdn.alpinelinux.org/mirrors.aliyun.com/g' /etc/apk/repositories
 	\
 	\
 	#inotify 2.+
-    && \
-    mkdir -p ~/build/inotify && cd ~/build/inotify && \
-    tar -zxf /tmp/inotify.tgz --strip-components 1 && \
-    /usr/local/php/bin/phpize && \
-    ./configure \
-        --with-php-config=/usr/local/php/bin/php-config \
-        --enable-inotify \
-        && \
-    make && make install && \
-    cd .. && rm -rf inotify \
-	\
-	\
+    #&& \
+    #mkdir -p ~/build/inotify && cd ~/build/inotify && \
+    #tar -zxf /tmp/inotify.tgz --strip-components 1 && \
+    #/usr/local/php/bin/phpize && \
+    #./configure \
+    #    --with-php-config=/usr/local/php/bin/php-config \
+    #    --enable-inotify \
+    #    && \
+    #make && make install && \
+    #cd .. && rm -rf inotify \
+	#\
+	#\
     #redis 5.+
-    && \
-    mkdir -p ~/build/redis && cd ~/build/redis && \
-    tar -zxf /tmp/redis.tgz --strip-components 1 && \
-    /usr/local/php/bin/phpize && \
-    ./configure \
-        --with-php-config=/usr/local/php/bin/php-config \
-        --enable-redis \
-        && \
-    make && make install && \
-    cd .. && rm -rf redis \
-	\
-	\
+    #&& \
+    #mkdir -p ~/build/redis && cd ~/build/redis && \
+    #tar -zxf /tmp/redis.tgz --strip-components 1 && \
+    #/usr/local/php/bin/phpize && \
+    #./configure \
+    #    --with-php-config=/usr/local/php/bin/php-config \
+    #    --enable-redis \
+    #    && \
+    #make && make install && \
+    #cd .. && rm -rf redis \
+	#\
+	#\
     #uuid 1.0.4 (libuuid-1.0.3)
     && \
     mkdir -p ~/build/libuuid && cd ~/build/libuuid && \
     tar -zxf /tmp/libuuid.tgz --strip-components 1 && \
     ./configure --prefix=/usr && \
     make && make install && \
-    cd ../ && rm -rf libuuid && \
-    \
-    mkdir -p ~/build/uuid && cd ~/build/uuid && \
-    tar -zxf /tmp/uuid.tgz --strip-components 1 && \
-    /usr/local/php/bin/phpize && \
-    ./configure --with-php-config=/usr/local/php/bin/php-config && \
-    make && make install && \
-    cd ../ && rm -rf uuid \
-    \
-    \
+    cd ../ && rm -rf libuuid \
+    #&& \
+    #mkdir -p ~/build/uuid && cd ~/build/uuid && \
+    #tar -zxf /tmp/uuid.tgz --strip-components 1 && \
+    #/usr/local/php/bin/phpize && \
+    #./configure --with-php-config=/usr/local/php/bin/php-config && \
+    #make && make install && \
+    #cd ../ && rm -rf uuid \
+    #\
+    #\
     #memcached 3.+ 需要libmemcached
-    && \
-    apk add libmemcached-dev && \
-    mkdir -p ~/build/memcached_p && cd ~/build/memcached_p && \
-    tar -zxf /tmp/memcached.tgz --strip-components 1 && \
-    /usr/local/php/bin/phpize && \
-    ./configure --with-php-config=/usr/local/php/bin/php-config && \
-    make && make install && \
-    cd ../ && rm -rf memcached_p \
-    \
-    \
+    #&& \
+    #apk add libmemcached-dev && \
+    #mkdir -p ~/build/memcached_p && cd ~/build/memcached_p && \
+    #tar -zxf /tmp/memcached.tgz --strip-components 1 && \
+    #/usr/local/php/bin/phpize && \
+    #./configure --with-php-config=/usr/local/php/bin/php-config && \
+    #make && make install && \
+    #cd ../ && rm -rf memcached_p \
+    #\
+    #\
     #event 2.+
-    && \
-    mkdir -p ~/build/event && cd ~/build/event && \
-    tar -zxf /tmp/event.tgz --strip-components 1 && \
-    /usr/local/php/bin/phpize && \
-    ./configure \
-        --with-php-config=/usr/local/php/bin/php-config \
-        --with-event-libevent-dir=/usr \
-        && \
-    make && make install && \
-    cd ../ && rm -rf event \
-    \
-    \
+    #&& \
+    #mkdir -p ~/build/event && cd ~/build/event && \
+    #tar -zxf /tmp/event.tgz --strip-components 1 && \
+    #/usr/local/php/bin/phpize && \
+    #./configure \
+    #    --with-php-config=/usr/local/php/bin/php-config \
+    #    --with-event-libevent-dir=/usr \
+    #    && \
+    #make && make install && \
+    #cd ../ && rm -rf event \
+    #\
+    #\
     #pthreads -->Segmentation fault 分段错误
     #&& \
     #mkdir -p ~/build/pthreads && cd ~/build/pthreads && \
@@ -239,15 +236,12 @@ RUN sed -i 's/dl-cdn.alpinelinux.org/mirrors.aliyun.com/g' /etc/apk/repositories
     \
     && ln -s /usr/local/php/bin/* /usr/local/bin/ && ln -s /usr/local/php/sbin/php-fpm /usr/local/bin \
     && pecl channel-update pecl.php.net \
-    && pecl install igbinary \
-    && pecl install amqp \
-    && pecl install apcu \
-    && pecl install protobuf \
-    #&& pecl upgrade-all \
+    && pecl install igbinary amqp apcu protobuf redis uuid inotify event \
+    #&& pecl install memcache memcached  \ 只占用内存移除
     && rm -rf /tmp/* ~/.pearrc ~/build \
     && apk del $PHPIZE_DEPS \
     && php -m
 
 EXPOSE 9000
 CMD ["php-fpm"]
-#docker build -t cffycls/php . && docker-slim build cffycls/php
+# docker build -t cffycls/php .
