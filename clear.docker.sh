@@ -1,4 +1,4 @@
-#/bin/bash
+#!/bin/bash
 
 #1、清理所有已经停止的容器
 # docker rm $(docker ps -a -q)

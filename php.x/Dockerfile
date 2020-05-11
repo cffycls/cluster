@@ -6,7 +6,7 @@ FROM alpine:3.11
 MAINTAINER cffycls@foxmail.com
 
 # dependencies required for running "phpize" 2020.4.10组件更新
-ENV PHP_VERSION 7.3.16
+ENV PHP_VERSION 7.4.5
 
 ADD packages /tmp/
 ###
@@ -51,6 +51,9 @@ RUN sed -i 's/dl-cdn.alpinelinux.org/mirrors.aliyun.com/g' /etc/apk/repositories
        		libevent-dev \
        		rabbitmq-c-dev \
             pcre2-dev \
+## oniguruma: 安装php7.4的过程中，mbstring的正则表达式处理功能对这个包有依赖性
+            oniguruma \
+            oniguruma-dev \
        		" \
     && apk add --no-cache \
         curl \
@@ -127,42 +130,13 @@ RUN sed -i 's/dl-cdn.alpinelinux.org/mirrors.aliyun.com/g' /etc/apk/repositories
     /usr/local/php/bin/phpize && \
     ./configure \
         --with-php-config=/usr/local/php/bin/php-config \
-		--enable-coroutine \
 		--enable-openssl  \
 		--enable-http2  \
-		--enable-async-redis \
 		--enable-sockets \
-		--enable-mysqlnd \
 		&& \
 	\
     make && make install && \
     cd ../ && rm -rf swoole \
-	\
-	\
-	#inotify 2.+
-    && \
-    mkdir -p ~/build/inotify && cd ~/build/inotify && \
-    tar -zxf /tmp/inotify.tgz --strip-components 1 && \
-    /usr/local/php/bin/phpize && \
-    ./configure \
-        --with-php-config=/usr/local/php/bin/php-config \
-        --enable-inotify \
-        && \
-    make && make install && \
-    cd .. && rm -rf inotify \
-	\
-	\
-    #redis 5.+
-    && \
-    mkdir -p ~/build/redis && cd ~/build/redis && \
-    tar -zxf /tmp/redis.tgz --strip-components 1 && \
-    /usr/local/php/bin/phpize && \
-    ./configure \
-        --with-php-config=/usr/local/php/bin/php-config \
-        --enable-redis \
-        && \
-    make && make install && \
-    cd .. && rm -rf redis \
 	\
 	\
     #uuid 1.0.4 (libuuid-1.0.3)
@@ -171,93 +145,39 @@ RUN sed -i 's/dl-cdn.alpinelinux.org/mirrors.aliyun.com/g' /etc/apk/repositories
     tar -zxf /tmp/libuuid.tgz --strip-components 1 && \
     ./configure --prefix=/usr && \
     make && make install && \
-    cd ../ && rm -rf libuuid && \
+    cd ../ && rm -rf libuuid \
     \
-    mkdir -p ~/build/uuid && cd ~/build/uuid && \
-    tar -zxf /tmp/uuid.tgz --strip-components 1 && \
-    /usr/local/php/bin/phpize && \
-    ./configure --with-php-config=/usr/local/php/bin/php-config && \
-    make && make install && \
-    cd ../ && rm -rf uuid \
+    # swoole_tracker74
+    && mv /tmp/swoole-tracker/swoole_tracker74.so /usr/local/php/lib/php/extensions/no-debug-non-zts-20190902/swoole_tracker.so \
     \
-    \
-    #memcached 3.+ 需要libmemcached
-    && \
-    apk add libmemcached-dev && \
-    mkdir -p ~/build/memcached_p && cd ~/build/memcached_p && \
-    tar -zxf /tmp/memcached.tgz --strip-components 1 && \
-    /usr/local/php/bin/phpize && \
-    ./configure --with-php-config=/usr/local/php/bin/php-config && \
-    make && make install && \
-    cd ../ && rm -rf memcached_p \
-    \
-    \
-    #event 2.+
-    && \
-    mkdir -p ~/build/event && cd ~/build/event && \
-    tar -zxf /tmp/event.tgz --strip-components 1 && \
-    /usr/local/php/bin/phpize && \
-    ./configure \
-        --with-php-config=/usr/local/php/bin/php-config \
-        --with-event-libevent-dir=/usr \
-        && \
-    make && make install && \
-    cd ../ && rm -rf event \
-    \
-    \
-    # imagick-3.+ 需要imagemagick
-#    && \
-#    mkdir -p ~/build/imagemagick && cd ~/build/imagemagick && \
-#    tar -zxf /tmp/imagemagick.tgz --strip-components 1 && \
-#    ./configure && \
-#    make && make install && \
-#    cd ../ && rm -rf imagemagick && \
-#    \
-#    mkdir -p ~/build/imagick && cd ~/build/imagick && \
-#    tar -zxf /tmp/imagick.tgz --strip-components 1 && \
-#    /usr/local/php/bin/phpize && \
-#    ./configure --with-php-config=/usr/local/php/bin/php-config && \
-#    make && make install && \
-#    cd ../ && rm -rf imagick \
-#    \
-#    \
     # sdebug
-    && \
-    ln -s /usr/local/php/bin/* /usr/local/bin/ && ln -s /usr/local/php/sbin/php-fpm /usr/local/bin && \
-    cd /tmp/sdebug && \
-    ./rebuild.sh && \
-    # swoole_tracker73
-#7.4    cp /tmp/swoole-tracker/swoole_tracker73.so /usr/local/php/lib/php/extensions/no-debug-non-zts-20190902 \
-    cp /tmp/swoole-tracker/swoole_tracker73.so /usr/local/php/lib/php/extensions/no-debug-non-zts-20180731 && \
-    mv /usr/local/php/lib/php/extensions/no-debug-non-zts-20180731/swoole_tracker73.so /usr/local/php/lib/php/extensions/no-debug-non-zts-20180731/swoole_tracker.so \
+    #&& cd /tmp/ && git clone https://github.com/mabu233/sdebug.git && cd sdebug \
+    ##&& pwd && ls rebuild.sh -lh && ./rebuild.sh \ bash无
+    #&& phpize && ./configure && make clean && make all && make install \
     \
 #======================================================================================================
     \
 #======================================================================================================
     \
+    && ln -s /usr/local/php/bin/* /usr/local/bin/ \
+    && ln -s /usr/local/php/sbin/php-fpm /usr/local/bin \
     && pecl channel-update pecl.php.net \
-    && pecl install igbinary \
-    && pecl install amqp \
-    && pecl install apcu \
-    && pecl install protobuf \
+    && pecl install igbinary amqp apcu protobuf redis uuid inotify event \
     && rm -rf /tmp/* ~/.pearrc ~/build \
     && apk del $PHPIZE_DEPS \
     && php -m
 
 # 部署node-agent
 #参考：https://github.com/hyperf/hyperf-docker - swoole tracker
-ADD swoole-tracker-install.sh /tmp/
-RUN chmod +x /tmp/swoole-tracker-install.sh && \
-    cd /tmp/ && \
+ADD packages/swoole-tracker-install.sh /tmp/
+RUN chmod +x /tmp/swoole-tracker-install.sh && cd /tmp/ && \
     ./swoole-tracker-install.sh && \
-    rm /tmp/swoole-tracker-install.sh
+    rm -rf /tmp/*
 
 # 添加entrypoint脚本
 RUN printf '#!/bin/sh\n/opt/swoole/script/php/swoole_php /opt/swoole/node-agent/src/node.php &\nphp-fpm $@' > /opt/swoole/entrypoint.sh && \
     chmod 755 /opt/swoole/entrypoint.sh
 
 # 启用entrypoint脚本（-x方便调试， 可以去掉）
-# ENTRYPOINT [ "sh", "-x", "/opt/swoole/entrypoint.sh" ]
-# EXPOSE 9000
-# CMD ["php-fpm"]
+ENTRYPOINT [ "sh", "-x", "/opt/swoole/entrypoint.sh" ]
 # docker build -t cffycls/php:debug .
