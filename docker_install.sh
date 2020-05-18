@@ -13,3 +13,16 @@ apt-get update && apt-get install docker-ce -y
 
 docker network create mybridge --subnet=172.1.0.0/16
 docker network create others --subnet=111.0.0.0/8
+tee /etc/docker/daemon.json <<-'EOF'
+{
+  "registry-mirrors": ["https://kuogup1r.mirror.aliyuncs.com"],
+  "dns": "8.8.8.8"
+}
+EOF
+
+#开机启动、权限更改
+systemctl enable docker 
+#groupadd docker 
+gpasswd -a $USER docker && newgrp docker
+systemctl restart docker
+chmod a+rw /var/run/docker.sock

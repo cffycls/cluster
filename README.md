@@ -57,4 +57,7 @@ port       	host/phpinfo.path 					cluster
 5、使用 cluster_redis/rec.sh ，搭配配置文件，创建 基于redis-5.05 的3对主从集群；  
 6、debian系统docker自动安装：docker_install.sh，TDengine 安装后提示； 
 
+>【note】
+[phpstorm-2020 Linux版](https://download.jetbrains.com/webide/PhpStorm-2020.1.1.tar.gz)
+[Win版](https://download.jetbrains.8686c.com/webide/PhpStorm-2020.1.1.exe)
 
