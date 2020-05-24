@@ -17,6 +17,13 @@ mg1 mg2 mg3
 root//123456
 ```
 
+elasticsearch:
+```markdown
+[tool || es.sh: ]
+es
+172.1.112.12 [default]9200,9300 [外]无
+```
+
 redis:
 ```markdown
 [rec.redis.sh: ] rm rs [主从]
@@ -58,4 +65,20 @@ nginx:
 172.1.2.12 [default]80 [外]8082
 [ngx_lua_waf/waf.sh: ]
 172.1.2.13 [default]80 [外]-p 8084:80 -p 8085:443 -p 9500:9500
+```
+
+### UI 浏览: 112.xx
+----
+phpmyadmin:
+```markdown
+[phpmyadmin.sh: ]
+pma
+172.1.112.11 [default]8500 [外]8500
+```
+
+kibana:
+```markdown
+[tool || kibana.sh: ]
+pma
+172.1.112.11 [default]5601 [外]5601
 ```
