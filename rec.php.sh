@@ -2,6 +2,7 @@
 #docker network create mybridge --subnet=172.1.0.0/16
 docker stop p1 p2 p3 && docker rm p1 p2 p3
 
+# RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 docker run --name p1 \
 	--restart=always \
   --network=mybridge --ip=172.1.1.11 \

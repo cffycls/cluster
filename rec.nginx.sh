@@ -9,7 +9,8 @@ docker run -itd --name n1 \
 	-v /etc/timezone:/etc/localtime \
 	-v /home/wwwroot/cluster/openresty.a/conf:/usr/local/openresty/nginx/conf \
 	-v /home/wwwroot/cluster/openresty.a/logs:/usr/local/openresty/nginx/logs \
-	-v /home/wwwroot/cluster/html:/usr/local/openresty/nginx/html openresty/openresty:stretch 
+	-v /home/wwwroot/cluster/html:/usr/local/openresty/nginx/html \
+	openresty/openresty:stretch
 
 docker run -itd --name n2 \
 	--privileged=true --restart=always \
@@ -18,4 +19,5 @@ docker run -itd --name n2 \
 	-v /etc/timezone:/etc/localtime \
 	-v /home/wwwroot/cluster/openresty.b/conf:/usr/local/openresty/nginx/conf \
 	-v /home/wwwroot/cluster/openresty.b/logs:/usr/local/openresty/nginx/logs \
-	-v /home/wwwroot/cluster/html:/usr/local/openresty/nginx/html openresty/openresty:stretch 
+	-v /home/wwwroot/cluster/html:/usr/local/openresty/nginx/html \
+	openresty/openresty:stretch
