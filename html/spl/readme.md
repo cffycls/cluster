@@ -1,4 +1,5 @@
-SplDoublyLinkedList.0|SplQueue.4|SplStack.6
+##SPL: Standard PHP Library 标准PHP类库
+SplDoublyLinkedList.0 | SplQueue.4 | SplStack.6
 ====
 1、类的关系
 ----
