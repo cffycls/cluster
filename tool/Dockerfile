@@ -3,7 +3,7 @@
 FROM debian:buster-slim
 
 #MAINTAINER 维护者信息
-MAINTAINER yongqiang.wang
+MAINTAINER cffycls@foxmail.com
 
 #https报错，用http
 RUN cat /etc/issue \
