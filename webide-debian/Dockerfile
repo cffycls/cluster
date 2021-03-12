@@ -123,6 +123,7 @@ RUN echo '安装g' \
     && set -ex \
 # https://github.com -> https://github.com.cnpmjs.org
     && /tmp/shell/g-install.sh \
+    && mkdir -p ${HOME}/.g/go \
     && echo 'export GOROOT="${HOME}/.g/go"' >> $HOME/.bashrc \
     && echo 'export PATH="${HOME}/.g/go/bin:$PATH"' >> $HOME/.bashrc \
     && echo 'export G_MIRROR=https://golang.google.cn/dl/' >> $HOME/.bashrc \
@@ -171,7 +172,7 @@ RUN echo '开始安装：php + composer + swoole' \
     && echo 'export PATH=$PATH:/usr/local/php8/bin' >> $HOME/.bashrc \
     && bash -i -c "source $HOME/.bashrc && php -v"
 
-RUN echo '安装composer，swoole及其他扩展' \
+RUN echo '安装swoole及其他扩展' \
     && set -ex \
     && wget -O /tmp/packages/swoole.tar.gz "https://github.com/swoole/swoole-src/archive/master.tar.gz" \
     && mkdir -p /tmp/build/swoole && cd /tmp/build/swoole \
@@ -182,12 +183,15 @@ RUN echo '安装composer，swoole及其他扩展' \
             --enable-http2  \
             --enable-sockets \
         && make && make install \
-    && bash -i -c "pecl install uuid igbinary event inotify apcu" \
+    && bash -i -c "pecl install uuid igbinary event inotify apcu"
+
+RUN echo '安装composer' \
+    && set -ex \
     && cp /tmp/shell/php.ini /usr/local/php8/etc/php.ini \
     && bash -i -c "php -m \
     && curl -sS https://getcomposer.org/installer | php \
     && mv composer.phar /usr/local/php8/bin/composer && composer -V \
-    && composer config -g repo.packagist composer https://mirrors.aliyun.com/composer/'\
+    && composer config -g repo.packagist composer https://mirrors.aliyun.com/composer/ \
     "
 
 
