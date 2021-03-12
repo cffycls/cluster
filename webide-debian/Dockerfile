@@ -31,7 +31,9 @@ ENV PASSWORD=123456\
     PATH=$JAVA_HOME/bin:$MAVEN_HOME/bin:$PATH \
     HOME='/home/coder' \
     NODEJS_VERSION=15 \
-    NVM_NODEJS_ORG_MIRROR='https://npm.taobao.org/mirrors/node'
+    NVM_NODEJS_ORG_MIRROR='https://npm.taobao.org/mirrors/node' \
+    GOROOT='/usr/local/go' \
+    GOPATH='/usr/local/gopath'
 
 RUN echo '开始安装基础软件包' \
     && set -ex \
@@ -60,14 +62,16 @@ index-url = http://mirrors.aliyun.com/pypi/simple/ \n\
 \n\
 [install] \n\
 trusted-host=mirrors.aliyun.com \n\
-'> /home/coder/.pip/pip.conf \
-    && echo '开始安装：pyenv' \
+'> /home/coder/.pip/pip.conf
+
+RUN echo '开始安装：pyenv' \
     && set -ex \
+# https://github.com -> https://github.com.cnpmjs.org
     && rm -rf /home/coder/.pyenv && runuser -l coder /tmp/shell/pyenv-installer.sh \
     && echo 'export PATH="/home/coder/.pyenv/bin:$PATH"' >> $HOME/.bashrc \
     && echo 'eval "$(pyenv init -)"' >> $HOME/.bashrc \
     && echo 'eval "$(pyenv virtualenv-init -)"' >> $HOME/.bashrc \
-    && source $HOME/.bashrc
+    && bash -i -c "source $HOME/.bashrc && pyenv -v"
 
 
 # 2. java + maven项目管理
@@ -85,7 +89,7 @@ RUN echo '开始安装：java-15 + maven项目管理' \
     && tar -zxvf /tmp/packages/apache-maven-3.6.3-bin.tar.gz --strip-components 1 \
     && echo 'export MAVEN_HOME=/usr/local/apache-maven' >> $HOME/.bashrc \
     && echo 'export PATH=${PATH}:${MAVEN_HOME}/bin' >> $HOME/.bashrc \
-    && source $HOME/.bashrc \
+    && bash -i -c "source $HOME/.bashrc" \
     && mkdir -p /home/coder/.m2/repository && chmod -R 0777 /home/coder/.m2
 COPY maven/settings.xml /home/coder/.m2/settings.xml
 
@@ -108,10 +112,21 @@ RUN echo '开始安装：go + g' \
     && set -ex \
     && mkdir -p /usr/local/go && cd /usr/local/go \
     && tar -zxvf /tmp/packages/go1.16.1.linux-amd64.tar.gz --strip-components 1 \
-    && echo 'export PATH=$PATH:/usr/local/go/bin' >> $HOME/.bashrc \
-    && source $HOME/.bashrc && go version \
+    && echo 'export GOROOT=$GOROOT' >> $HOME/.bashrc \
+    && echo 'export PATH=$PATH:$GOROOT/bin' >> $HOME/.bashrc \
     \
-    && /tmp/shell/g-install.sh  && g -v
+    && echo 'export GOPATH=$GOPATH' >> $HOME/.bashrc \
+    && echo 'export PATH=$PATH:$GOPATH/bin' >> $HOME/.bashrc \
+    && bash -i -c "source $HOME/.bashrc && go version"
+
+RUN echo '安装g' \
+    && set -ex \
+# https://github.com -> https://github.com.cnpmjs.org
+    && /tmp/shell/g-install.sh \
+    && echo 'export GOROOT="${HOME}/.g/go"' >> $HOME/.bashrc \
+    && echo 'export PATH="${HOME}/.g/go/bin:$PATH"' >> $HOME/.bashrc \
+    && echo 'export G_MIRROR=https://golang.google.cn/dl/' >> $HOME/.bashrc \
+    && bash -i -c "source $HOME/.bashrc && g -v"
 
 
 ## 5. php
@@ -154,35 +169,44 @@ RUN echo '开始安装：php + composer + swoole' \
         && find -type f -name '*.a' -delete \
         && make install \
     && echo 'export PATH=$PATH:/usr/local/php8/bin' >> $HOME/.bashrc \
-    && source $HOME/.bashrc && php -v && php -m \
-#    && pecl install swoole && php --ri swoole
+    && bash -i -c "source $HOME/.bashrc && php -v"
+
+RUN echo '安装composer，swoole及其他扩展' \
+    && set -ex \
     && wget -O /tmp/packages/swoole.tar.gz "https://github.com/swoole/swoole-src/archive/master.tar.gz" \
     && mkdir -p /tmp/build/swoole && cd /tmp/build/swoole \
         && tar zxvf /tmp/packages/swoole.tar.gz --strip-components 1 \
         && /usr/local/php8/bin/phpize && \
             ./configure --with-php-config=/usr/local/php8/bin/php-config \
-            --enable-openssl  \
+            --enable-openssl \
             --enable-http2  \
             --enable-sockets \
         && make && make install \
-    && pecl install uuid igbinary event inotify apcu \
+    && bash -i -c "pecl install uuid igbinary event inotify apcu" \
     && cp /tmp/shell/php.ini /usr/local/php8/etc/php.ini \
+    && bash -i -c "php -m \
     && curl -sS https://getcomposer.org/installer | php \
-    && mv composer.phar /usr/local/php8/bin/composer && composer -V
+    && mv composer.phar /usr/local/php8/bin/composer && composer -V \
+    && composer config -g repo.packagist composer https://mirrors.aliyun.com/composer/'\
+    "
+
 
 
 # 结尾. 使用体验优化
-RUN set -ex && chown coder:coder -R $HOME
+RUN set -ex && chown coder:coder -R $HOME \
+    && sudo sed -i "s/#alias ll='ls -l'/alias ll='ls -l'/" /root/.bashrc
+
 USER coder
 COPY vscode-docker /tmp/vscode-docker
-RUN java --version \
-    && python -V && pip -V \
-#    && php -v && php -m \
-    && bash -i -c "node -v" \
+RUN bash -i -c "java --version \
+    && python -V && pip -V && pyenv -v \
+    && node -v \
+    && go version && g version \
+    && php -v && php -m && php --ri swoole" \
     \
     && set -ex \
     && sudo sed -i "s/#alias ll='ls -l'/alias ll='ls -l'/" $HOME/.bashrc \
-#     \
+    \
 #     && sudo apt-get install -y zsh && sudo chsh -s /usr/bin/zsh && /usr/bin/zsh --version
 # RUN bash -c "$(wget https://raw.github.com/robbyrussell/oh-my-zsh/master/tools/install.sh -O -)"
     && sudo mkdir /code \
