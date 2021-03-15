@@ -198,18 +198,13 @@ RUN echo '安装composer' \
 
 # 结尾. 使用体验优化
 RUN set -ex && chown coder:coder -R $HOME \
-    && sudo sed -i "s/#alias ll='ls -l'/alias ll='ls -l'/" /root/.bashrc
+    && sudo sed -i "s/#alias ll='ls -l'/alias ll='ls -l'/" /root/.bashrc \
+    && chmod 777 -R /tmp
 
 USER coder
 COPY vscode-docker /tmp/vscode-docker
-RUN bash -i -c "java --version \
-    && python -V && pip -V && pyenv -v \
-    && node -v \
-    && go version && g version \
-    && php -v && php -m && php --ri swoole" \
-    \
-    && set -ex \
-    && sudo sed -i "s/#alias ll='ls -l'/alias ll='ls -l'/" $HOME/.bashrc \
+
+RUN set -ex \
     \
 #     && sudo apt-get install -y zsh && sudo chsh -s /usr/bin/zsh && /usr/bin/zsh --version
 # RUN bash -c "$(wget https://raw.github.com/robbyrussell/oh-my-zsh/master/tools/install.sh -O -)"
@@ -219,7 +214,22 @@ RUN bash -i -c "java --version \
     && echo 'ide添加插件包：' \
     && cd $HOME/.vscode-extensions && tar zxf /tmp/vscode-docker/extensions.tar.gz --strip-components 1 \
     && cp /tmp/vscode-docker/settings.json $HOME/.vscode/User/ \
-    && rm -rf /tmp/*
+    && sudo rm -rf /tmp/*
+
+RUN sed -i "s/#alias ll='ls -l'/alias ll='ls -l'/" $HOME/.bashrc
+#\
+#    && set -ex \
+#    && bash -c "\
+#    source $HOME/.bashrc \
+#    && java --version \
+#    && python -V && pip -V && pyenv -v \
+#    && node -v \
+#    && go version \
+#    && g version \
+#    && php -v \
+#    && php -m \
+#    && php --ri swoole \
+#    "
 
 # 启动配置
 WORKDIR /code
