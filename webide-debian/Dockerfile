@@ -183,7 +183,8 @@ RUN echo '安装swoole及其他扩展' \
             --enable-http2  \
             --enable-sockets \
         && make && make install \
-    && bash -i -c "pecl install uuid igbinary event inotify apcu"
+    && bash -i -c "pecl install uuid igbinary event inotify apcu
+#     redis memcached amqp protobuf
 
 RUN echo '安装composer' \
     && set -ex \
