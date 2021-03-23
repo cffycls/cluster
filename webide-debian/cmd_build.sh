@@ -32,6 +32,6 @@ EOF
 
 
 # docker_login_aliyun
-# docker rm -f n3 && docker run --name n3 -p 8095:8080 -v $PWD:/code -itd node-java-python-for-one
+# docker rm -f n3 && docker run --name n3 -p 8095:8080 -v $PWD:/code -itd cffycls/webide-debian.sh
 # docker rm -f n3 && docker run --name n3 -p 8095:8080 -v ～/workdir:/code -itd node-java-python-for-one
 
