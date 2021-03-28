@@ -40,7 +40,8 @@ RUN echo '开始安装基础软件包' \
     && apt-get install -y tree wget gcc make cmake curl vim git autoconf \
     \
 # python3依赖
-    zlib1g-dev libreadline-dev tk-dev libgdbm-dev libpcap-dev \
+    zlib1g-dev libreadline-dev tk-dev libgdbm-dev libpcap-dev libffi-dev \
+    build-essential fakeroot dpkg-dev libcurl4-openssl-dev libsqlite3-dev \
 ## php依赖 oniguruma->libonig-dev https://www.cnblogs.com/taoshihan/p/13196036.html
     libsqlite3-dev libcurl4-openssl-dev libonig-dev \
     libedit-dev libxml2-dev libgd-dev libfreetype6-dev libevent-dev librabbitmq-dev libpcre2-dev
@@ -51,12 +52,13 @@ RUN echo '开始安装基础软件包' \
 RUN echo '开始安装: python3.9 + pip包管理' \
     && set -ex \
     && mkdir -p /usr/local/python3 \
-    && cd /tmp/build && wget https://www.openssl.org/source/openssl-1.1.1j.tar.gz \
-    && tar -zxvf /tmp/packages/Python-3.9.2.tgz --strip-components 1 && mv openssl-1.1.1j openssl && cd openssl \
+    && mkdir -p /tmp/build/openssl \
+    && cd /tmp/build/openssl && wget https://www.openssl.org/source/openssl-1.1.1j.tar.gz \
+    && tar -zxvf openssl-1.1.1j.tar.gz --strip-components 1 \
     && ./config --prefix=/usr/local/openssl && make && make install \
     && mkdir -p /tmp/bulid/openssl && cd /tmp/bulid/openssl wget  && tar -zxvf /tmp/packages/Python-3.9.2.tgz --strip-components 1 \
     && mkdir -p /tmp/bulid/python3 && cd /tmp/bulid/python3 && tar -zxvf /tmp/packages/Python-3.9.2.tgz --strip-components 1 \
-    && ./configure --prefix=/usr/local/python3 --enable-optimizations  --with-openssl=/usr/local/openssl \
+    && ./configure --prefix=/usr/local/python3 --enable-optimizations --enable-loadable-sqlite-extensions --with-openssl=/usr/local/openssl \
     && make && make install \
     && ln -sf /usr/local/python3/bin/python3 /usr/bin/python && python -V \
     && ln -sf /usr/local/python3/bin/pip3 /usr/bin/pip && pip -V \
@@ -240,3 +242,32 @@ WORKDIR /code
 ENTRYPOINT ["code-server","--extensions-dir=/home/coder/.vscode-extensions","--auth=none","--bind-addr=0.0.0.0:8080","--user-data-dir=/home/coder/.vscode",">/home/coder/.vscode/runtime.log","2>&1","/code"]
 
 # https://hub.docker.com/r/linuxserver/code-server
+
+
+
+# git
+ sudo apt-get install build-essential fakeroot dpkg-dev libcurl4-openssl-dev
+
+     make clean
+       # https://codeload.github.com/git/git/tar.gz/refs/tags/v2.31.1
+       apt-get install gettext
+       make configure && ./configure --prefix=/usr/local/git && make && make install
+       ln -sf /usr/local/git/bin/git* /usr/bin/
+ # WSL ip https://www.tqwba.com/x_d/jishu/284353.html
+ ip addr show eth0
+ 设置端口转发
+ netsh interface portproxy add v4tov4 listenport=8080 listenaddress=0.0.0.0 connectport=8080 connectaddress=172.24.187.207 protocol=tcp
+ 查看下端口转发状态
+ netsh interface portproxy show all
+ 删除端口转发
+ netsh interface portproxy delete v4tov4 listenport=8080 listenaddress=0.0.0.0
+
+# mitmproxy-6.0.2-linux
+mkdir /tmp/build/mitmproxy && cd /tmp/build/mitmproxy
+wget https://snapshots.mitmproxy.org/6.0.2/mitmproxy-6.0.2-linux.tar.gz
+tar -zxvf mitmproxy-6.0.2-linux.tar.gz && rm -f mitmproxy-6.0.2-linux.tar.gz
+mv mit* /usr/bin
+mitmproxy 启动一次生成证书文件 https://blog.csdn.net/u013091013/article/details/101430260
+mkdir /mnt/d/tmp
+win10安装 mitmproxy-ca.p12
+Android安装 mitmproxy-ca.pem
