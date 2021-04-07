@@ -1,7 +1,7 @@
 version: "3.9"  # optional since v1.27.0
 services:
-  njp3:
+  webide:
     build: .
-    image: node-java-python-for-one
-    container_name: njp3
+    image: cffyls/webide
+    container_name: cffyls/webide:0.9
     restart: on-failure

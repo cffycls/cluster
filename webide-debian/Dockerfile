@@ -18,8 +18,8 @@ deb-src http://mirrors.aliyun.com/debian/ buster main non-free contrib \n\
 deb-src http://mirrors.aliyun.com/debian/ buster-updates main non-free contrib \n\
 deb-src http://mirrors.aliyun.com/debian/ buster-backports main non-free contrib \n\
 '> /etc/apt/sources.list \
-    && echo '140.82.114.4 github.com \n' >> /etc/hosts \
-    && echo '185.199.108.133 raw.githubusercontent.com \n' >> /etc/hosts \
+#    && echo '140.82.114.4 github.com \n' >> /etc/hosts \
+#    && echo '185.199.108.133 raw.githubusercontent.com \n' >> /etc/hosts \
     && apt-get update
 
 
