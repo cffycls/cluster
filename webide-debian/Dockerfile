@@ -25,7 +25,7 @@ deb-src http://mirrors.aliyun.com/debian/ buster-backports main non-free contrib
 
 # 开始安装：pyenv + python3.9
 ENV PASSWORD=123456\
-    JAVA_HOME='/usr/local/jdk15' \
+    JAVA_HOME='/usr/local/jdk16' \
     MAVEN_HOME='/usr/share/apache-maven-3.6.3' \
 # PATH 不可加引号，解析不正常--注意
     PATH=$JAVA_HOME/bin:$MAVEN_HOME/bin:$PATH \
@@ -37,13 +37,16 @@ ENV PASSWORD=123456\
 
 RUN echo '开始安装基础软件包' \
     && set -ex \
-    && apt-get install -y tree wget gcc make cmake curl vim git autoconf \
-    \
+    && apt-get install -y tree wget curl vim git gcc make cmake autoconf
+
+RUN echo '**开始安装其它依赖' \
+    && set -ex \
 # python3依赖
     zlib1g-dev libreadline-dev tk-dev libgdbm-dev libpcap-dev \
 ## php依赖 oniguruma->libonig-dev https://www.cnblogs.com/taoshihan/p/13196036.html
     libsqlite3-dev libcurl4-openssl-dev libonig-dev \
     libedit-dev libxml2-dev libgd-dev libfreetype6-dev libevent-dev librabbitmq-dev libpcre2-dev
+
 
 
 
@@ -77,11 +80,11 @@ RUN echo '开始安装：pyenv' \
 # 2. java + maven项目管理
 # 配置java镜像源加速下载配置（使用阿里云的镜像源）'
 # maven安装最新版本3.6.3（版本太低会导致vscode插件无法正常编译调试）
-RUN echo '开始安装：java-15 + maven项目管理' \
+RUN echo '开始安装：java-16 + maven项目管理' \
     && set -ex \
-    && mkdir -p /usr/local/jdk15 && cd /usr/local/jdk15 \
-    && tar -zxvf /tmp/packages/jdk-15.0.2_linux-x64_bin.tar.gz --strip-components 1 \
-    && echo 'export JAVA_HOME=/usr/local/jdk15' >> $HOME/.bashrc \
+    && mkdir -p /usr/local/jdk16 && cd /usr/local/jdk16 \
+    && tar -zxvf /tmp/packages/jdk-16_linux-x64_bin.tar.gz --strip-components 1 \
+    && echo 'export JAVA_HOME=/usr/local/jdk16' >> $HOME/.bashrc \
     && echo 'export CLASSPATH=.:$JAVA_HOME/lib' >> $HOME/.bashrc \
     && echo 'export export PATH=$PATH:$JAVA_HOME/bin' >> $HOME/.bashrc \
     && echo 'maven...' \
@@ -183,7 +186,7 @@ RUN echo '安装swoole及其他扩展' \
             --enable-http2  \
             --enable-sockets \
         && make && make install \
-    && bash -i -c "pecl install uuid igbinary event inotify apcu
+    && bash -i -c "pecl install uuid igbinary event inotify apcu"
 #     redis memcached amqp protobuf
 
 RUN echo '安装composer' \
@@ -217,20 +220,28 @@ RUN set -ex \
     && cp /tmp/vscode-docker/settings.json $HOME/.vscode/User/ \
     && sudo rm -rf /tmp/*
 
-RUN sed -i "s/#alias ll='ls -l'/alias ll='ls -l'/" $HOME/.bashrc
-#\
-#    && set -ex \
-#    && bash -c "\
-#    source $HOME/.bashrc \
-#    && java --version \
-#    && python -V && pip -V && pyenv -v \
-#    && node -v \
-#    && go version \
-#    && g version \
-#    && php -v \
-#    && php -m \
-#    && php --ri swoole \
-#    "
+RUN sed -i "s/#alias ll='ls -l'/alias ll='ls -l'/" $HOME/.bashrc \
+    \
+    && set -ex \
+    && sudo apt-get install bash-completion \
+    && echo '\
+if [ -f /etc/bash_completion ]; then \n\
+. /etc/bash_completion \n\
+fi \n\
+    '> /home/coder/.pip/pip.conf \
+    && sudo apt-get clean && sudo apt-get autoclean && sudo apt-get autoremove \
+    \
+    && bash -c "\
+    source /etc/profile \
+    && java --version \
+    && python -V && pip -V && pyenv -v \
+    && node -v \
+    && go version \
+    && g version \
+    && php -v \
+    && php -m \
+    && php --ri swoole \
+    "
 
 # 启动配置
 WORKDIR /code

@@ -11,3 +11,4 @@ rabbitmq/data13/*
 rabbitmq/data14/*
 consul/data.s/*
 consul/data.c/*
+webide-debian/diff

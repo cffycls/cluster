@@ -1,7 +1,7 @@
 version: "3.9"  # optional since v1.27.0
 services:
   njp3:
-    build: .
+    build: Dockerfile-njp
     image: node-java-python-for-one
     container_name: njp3
     restart: on-failure
