@@ -1,0 +1,7 @@
+version: "3.9"  # optional since v1.27.0
+services:
+  webide:
+    build: .
+    image: cffyls/webide:go-php-python
+    container_name: cffyls/webide:0.9
+    restart: on-failure

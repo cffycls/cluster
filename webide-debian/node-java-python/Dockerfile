@@ -117,6 +117,8 @@ RUN echo 'nvm安装并设置源' \
     && npm install -g yarn \
     "
 
+
+# 结尾. 使用体验优化
 RUN set -ex \
     && sudo apt-get install bash-completion \
     && echo '\
@@ -125,14 +127,9 @@ if [ -f /etc/bash_completion ]; then \n\
 fi \n\
     '> /etc/bash.bashrc \
     && sudo apt-get clean && sudo apt-get autoclean && sudo apt-get autoremove
-
-# 结尾. 使用体验优化
-RUN set -ex && chown coder:coder -R $HOME \
-    && sed -i "s/#alias ll='ls /alias ll='ls /" /root/.bashrc \
-    && sed -i "s/#alias ll='ls /alias ll='ls /" $HOME/.bashrc
-
 RUN set -ex \
-# RUN bash -c "$(wget https://raw.github.com/robbyrussell/oh-my-zsh/master/tools/install.sh -O -)"
+    && sed -i "s/#alias ll='ls /alias ll='ls /" /root/.bashrc \
+    && sed -i "s/#alias ll='ls /alias ll='ls /" $HOME/.bashrc \
     && mkdir /code \
     && mkdir -p $HOME/.vscode/User \
     && mkdir -p $HOME/.vscode-extensions \
