@@ -1,68 +1,37 @@
-# php7.3.5; Feb 7, 2019 link: https://github.com/docker-library/php/blob/master/7.4/alpine3.11/cli/Dockerfile
+# php8.03; 2021.04 link: https://github.com/docker-library/php/blob/master/8.0/alpine3.13/cli/Dockerfile
 # Base images 基础镜像+阿里源
-FROM alpine:3.11
+FROM alpine:3.13
 
 #MAINTAINER 维护者信息: +fileinfo
 MAINTAINER cffycls@foxmail.com
 
 # dependencies required for running "phpize" 2020.4.26组件更新
-ENV PHP_VERSION 7.4.5
+ENV PHP_VERSION=8.0.3 \
+    PHPIZE_DEPS="autoconf dpkg-dev dpkg file g++ gcc libc-dev make pkgconf re2c " \
+    PHP_DEVS="argon2-dev coreutils curl-dev libedit-dev libsodium-dev libxml2-dev openssl-dev sqlite-dev \
+        libjpeg-turbo-dev libxpm-dev gd-dev gettext-dev freetype-dev libevent-dev rabbitmq-c-dev pcre2-dev \
+        oniguruma oniguruma-dev"
 
 COPY packages/ /tmp
-###
-# download.sh
-###
-RUN sed -i 's/dl-cdn.alpinelinux.org/mirrors.aliyun.com/g' /etc/apk/repositories \
+
+RUN echo '安装环境依赖' \
+    && set -ex \
+    && sed -i 's/dl-cdn.alpinelinux.org/mirrors.aliyun.com/g' /etc/apk/repositories \
     \
     && echo "use local '/tmp/*' packages..." && ls -l /tmp \
     && apk update \
-    && addgroup -g 82 -S www-data \
-    && adduser -u 82 -D -S -G www-data www-data \
-    && mkdir -p "/usr/local/etc/php/conf.d" && mkdir -p "/var/www/html" \
-    && chown www-data:www-data /var/www/html && chmod 777 /var/www/html \
     \
     #编译工具
-    && PHPIZE_DEPS="\
-            autoconf \
-         dpkg-dev dpkg \
-            file \
-            g++ \
-            gcc \
-            libc-dev \
-            make \
-            pkgconf \
-            re2c \
-            " \
-    #安装依赖
-    && PHP_DEVS="\
-       		argon2-dev \
-       		coreutils \
-       		curl-dev \
-       		libedit-dev \
-       		libsodium-dev \
-       		libxml2-dev \
-       		openssl-dev \
-       		sqlite-dev \
-       		libjpeg-turbo-dev \
-            libxpm-dev \
-           	gd-dev \
-       		gettext-dev \
-       		freetype-dev \
-       		libevent-dev \
-       		rabbitmq-c-dev \
-            pcre2-dev \
-## oniguruma: 安装php7.4的过程中，mbstring的正则表达式处理功能对这个包有依赖性
-            oniguruma \
-            oniguruma-dev \
-       		" \
     && apk add --no-cache \
         curl \
         tar \
         xz \
         openssl \
         wget \
-		$PHPIZE_DEPS $PHP_DEVS \
-    \
+		$PHPIZE_DEPS $PHP_DEVS
+
+RUN echo '编译安装php' \
+    && set -ex \
     && mkdir -p ~/bulid/php && cd ~/bulid/php \
     && tar -Jxf /tmp/php.tar.xz --strip-components 1 \
 	&& ./configure \
@@ -105,37 +74,34 @@ RUN sed -i 's/dl-cdn.alpinelinux.org/mirrors.aliyun.com/g' /etc/apk/repositories
         --with-gettext \
         ## 字符集转换
         --with-iconv \
-        \
-        --enable-fpm \
-        --with-fpm-user=www-data \
-        --with-fpm-group=www-data \
         --disable-cgi \
     && make -j "$(nproc)" \
     && find -type f -name '*.a' -delete \
     && make install \
+    && ln -s /usr/local/php/bin/* /usr/local/bin/ \
     && rm -rf /tmp/pear ~/.pearrc \
-    && cd ../ && rm -rf php \
-    #--enable-maintainer-zts \ #pthreads报错不用
-	\
+    && cd ../ && rm -rf php
+
 #======================================================================================================
-    \
 #======================================================================================================
 #测试 -- 需要对话参数，所以自定义安装
-    \
-    \
+RUN echo '编译安装swoole及其它扩展' \
+    && set -ex \
 	# swoole
-    && \
-    mkdir -p ~/build/swoole && cd ~/build/swoole && \
-    tar zxvf /tmp/swoole.tar.gz --strip-components 1 && \
-    /usr/local/php/bin/phpize && \
-    ./configure \
+#    && mkdir -p ~/build/swoole && cd ~/build/swoole \
+#    && wget -O /tmp/swoole.tar.gz "https://github.com/swoole/swoole-src/archive/master.tar.gz" \
+#    && tar zxvf /tmp/swoole.tar.gz --strip-components 1 \
+    && apk add git \
+    && git clone https://gitee.com/swoole/swoole.git && cd swoole \
+    && apk del git \
+    && /usr/local/php/bin/phpize && ./configure \
         --with-php-config=/usr/local/php/bin/php-config \
-		--enable-openssl  \
-		--enable-http2  \
-		--enable-sockets \
-		&& \
+        --enable-openssl \
+        --enable-mysqlnd \
+        --enable-http2  \
+        --enable-sockets --enable-swoole-curl --enable-swoole-json \
 	\
-    make && make install && \
+    && make && make install && \
     cd ../ && rm -rf swoole \
 	\
 	\
@@ -204,17 +170,6 @@ RUN sed -i 's/dl-cdn.alpinelinux.org/mirrors.aliyun.com/g' /etc/apk/repositories
     #make && make install && \
     #cd ../ && rm -rf event \
     #\
-    #\
-    #pthreads -->Segmentation fault 分段错误
-    #&& \
-    #mkdir -p ~/build/pthreads && cd ~/build/pthreads && \
-    #unzip /tmp/pthreads.zip && cd pthreads-master \
-    #/usr/local/php/bin/phpize && \
-    #./configure --with-php-config=/usr/local/php/bin/php-config && \
-    #make && make install && \
-    #cd ../../ && rm -rf pthreads \
-    #\
-    #\
     # imagick-3.+ 需要imagemagick
     #&& \
     #mkdir -p ~/build/imagemagick && cd ~/build/imagemagick && \
@@ -234,14 +189,14 @@ RUN sed -i 's/dl-cdn.alpinelinux.org/mirrors.aliyun.com/g' /etc/apk/repositories
     \
 #======================================================================================================
     \
-    && ln -s /usr/local/php/bin/* /usr/local/bin/ && ln -s /usr/local/php/sbin/php-fpm /usr/local/bin \
     && pecl channel-update pecl.php.net \
-    && pecl install igbinary amqp apcu protobuf redis uuid inotify event \
+#    && pecl install igbinary amqp apcu protobuf redis uuid inotify event \
+    && pecl install uuid igbinary event inotify apcu redis protobuf \
     #&& pecl install memcache memcached  \ 只占用内存移除
     && rm -rf /tmp/* ~/.pearrc ~/build \
     && apk del $PHPIZE_DEPS \
     && php -m
 
 EXPOSE 9000
-CMD ["php-fpm"]
+CMD ["php", "-a"]
 # docker build -t cffycls/php .
