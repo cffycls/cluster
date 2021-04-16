@@ -10,7 +10,7 @@ python -c \nimport runpy\nimport sys\nsys.path = [
 ] = 'install --no-cache-dir --no-index --find-links /tmp/tmpcacs1xc3 --root / --upgrade setuptools pip\']\nrunpy.run_module("pip", run_name="__main__", alter_sys=True)\n']' returned non-zero exit status 1. 
 ``` 
 
-docker rm -f n3 && docker run  -itd --name n3 -p 8095:8080 cffyls/webide:node-java-python
+docker rm -f n3 && docker run  -itd --name n3 -p 8095:8080 cffycls/webide:node-java-python
 docker exec -it njp bash
 docker-compose build
 

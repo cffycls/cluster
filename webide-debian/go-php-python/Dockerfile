@@ -49,7 +49,6 @@ RUN echo '**开始安装其它依赖' \
    libboost-all-dev
 
 
-
 # 1. 安装 python
 RUN echo '开始安装: python3.9 + pip包管理' \
     && set -ex \
@@ -145,33 +144,37 @@ RUN echo '安装swoole及其他扩展' \
     && set -ex \
     && wget -O /tmp/packages/swoole.tar.gz "https://github.com/swoole/swoole-src/archive/master.tar.gz" \
     && mkdir -p /tmp/build/swoole && cd /tmp/build/swoole \
-        && tar zxvf /tmp/packages/swoole.tar.gz --strip-components 1 \
-        && /usr/local/php8/bin/phpize && \
-            ./configure --with-php-config=/usr/local/php8/bin/php-config \
-            --enable-openssl \
-            --enable-http2  \
-            --enable-sockets \
-        && make && make install \
+    && tar zxvf /tmp/packages/swoole.tar.gz --strip-components 1 \
+    && /usr/local/php8/bin/phpize && \
+        ./configure --with-php-config=/usr/local/php8/bin/php-config \
+        --enable-openssl \
+        --enable-mysqlnd \
+        --enable-http2  \
+        --enable-sockets --enable-swoole-curl --enable-swoole-json && \
+    && make && make install \
     && bash -i -c "\
     pecl channel-update pecl.php.net \
     && pecl install uuid igbinary event inotify apcu redis protobuf \
-    "\
+    "
 #     amqp安装报错，暂不支持
-    \
+RUN echo '安装php调试yasd' \
+    && set -ex \
 #    [yasd] https://mp.weixin.qq.com/s/qw1nKd7hIPYiBqnewUE_gg
-    && mkdir -p /tmp/build/yasd && cd /tmp/build/yasd \
-        && git clone https://github.com/swoole/yasd.git \
-        && cd yasd && phpize --clean && phpize && ./configure \
+    && apt-get install -y gnutls-bin \
+    && cd /tmp/build/ \
+#       https://github.com/swoole/yasd.git
+        && git clone https://gitee.com/jimmylau/yasd.git  && cd yasd \
+        && /usr/local/php8/bin/phpize --clean && /usr/local/php8/bin/phpize \
+        && ./configure --with-php-config=/usr/local/php8/bin/php-config \
         && make clean && make && make install \
     && echo '\
 zend_extension=yasd \n\
 yasd.debug_mode=remote \n\
 yasd.remote_host=127.0.0.1 \n\
 yasd.remote_port=9000 \n\
-' >> /usr/local/php8/etc/php.ini
-
-
-RUN echo '安装composer' \
+' >> /usr/local/php8/etc/php.ini \
+    \
+    && echo '安装composer' \
     && set -ex \
     && cp /tmp/shell/php.ini /usr/local/php8/etc/php.ini \
     && bash -i -c "php -m \
@@ -183,7 +186,7 @@ RUN echo '安装composer' \
 
 # 结尾. 使用体验优化
 RUN set -ex \
-    && sudo apt-get install bash-completion \
+    && sudo apt-get install -y bash-completion \
     && echo '\
 if [ -f /etc/bash_completion ]; then \n\
 . /etc/bash_completion \n\
@@ -195,7 +198,7 @@ RUN set -ex \
     && sed -i "s/#alias ll='ls /alias ll='ls /" $HOME/.bashrc \
     && mkdir /code \
     && mkdir -p $HOME/.vscode/User \
-    && mkdir -p $HOME/.vscode-extensions \
+    && mkdir -p $HOME/.vscode-extzhsensions \
     && echo 'ide添加插件包：' \
 #    code-server --install-extension <extension id>
 #    && cd $HOME/.vscode-extensions && tar zxf /tmp/vscode-docker/extensions.tar.gz --strip-components 1 \
@@ -211,7 +214,11 @@ RUN set -ex \
     && code-server --install-extension ms-python.python \
 #     PHP Debug Adapter for Visual Studio Code
     && code-server --install-extension felixfbecker.php-debug \
-    && cp /tmp/vscode-docker/settings.json $HOME/.vscode/User/ \
+    && echo '\
+{ \n\
+    "workbench.colorTheme": "Default Dark+", \n\
+    "workbench.iconTheme": "vscode-icons" \n\
+}' > $HOME/.vscode/User/settings.json \
     && rm -rf /tmp/* \
 #    && echo '\
 #auth: password \n\
