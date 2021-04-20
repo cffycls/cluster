@@ -28,7 +28,7 @@ ENV PASSWORD=123456 \
 
 ADD packages /tmp/packages
 ADD shell /tmp/shell
-#ADD vscode-docker /tmp/vscode-docker
+ADD vscode-docker /tmp/vscode-docker
 
 RUN echo '开始安装基础软件包' \
     && set -ex \
@@ -70,9 +70,10 @@ RUN echo '开始安装：pyenv' \
     && set -ex \
 # https://github.com -> https://github.com.cnpmjs.org
     && rm -rf /home/coder/.pyenv && runuser -l coder /tmp/shell/pyenv-installer.sh \
+    && echo '\n\n# ===== pyenv 环境变量设置 =====\n' >> $HOME/.bashrc \
     && echo 'export PATH="/home/coder/.pyenv/bin:$PATH"' >> $HOME/.bashrc \
     && echo 'eval "$(pyenv init -)"' >> $HOME/.bashrc \
-    && echo 'eval "$(pyenv virtualenv-init -)"' >> $HOME/.bashrc \
+    && echo 'eval "$(pyenv virtualenv-init -)" \n' >> $HOME/.bashrc \
     && bash -i -c "source $HOME/.bashrc && pyenv -v"
 
 # 4. go
@@ -80,11 +81,10 @@ RUN echo '开始安装：go + g' \
     && set -ex \
     && mkdir -p /usr/local/go && cd /usr/local/go \
     && tar -zxvf /tmp/packages/go1.16.1.linux-amd64.tar.gz --strip-components 1 \
+    && echo '\n\n# ===== go 环境变量设置 =====\n' >> $HOME/.bashrc \
     && echo 'export GOROOT=$GOROOT' >> $HOME/.bashrc \
     && echo 'export PATH=$PATH:$GOROOT/bin' >> $HOME/.bashrc \
     \
-#    && echo 'export GOPATH=$GOPATH' >> $HOME/.bashrc \
-#    && echo 'export PATH=$PATH:$GOPATH/bin' >> $HOME/.bashrc \
     && bash -i -c "source $HOME/.bashrc && go version"
 
 RUN echo '安装g' \
@@ -92,9 +92,7 @@ RUN echo '安装g' \
 # https://github.com -> https://github.com.cnpmjs.org
     && /tmp/shell/g-install.sh \
     && mkdir -p ${HOME}/.g/go \
-    && echo 'export GOROOT="${GOROOT}"' >> $HOME/.bashrc \
-    && echo 'export PATH="${HOME}/.g/go/bin:$PATH"' >> $HOME/.bashrc \
-    && echo 'export G_MIRROR=https://golang.google.cn/dl/' >> $HOME/.bashrc \
+    && echo 'export G_MIRROR=https://golang.google.cn/dl/ \n' >> $HOME/.bashrc \
     && bash -i -c "source $HOME/.bashrc && g -v"
 
 
@@ -145,12 +143,12 @@ RUN echo '安装swoole及其他扩展' \
     && wget -O /tmp/packages/swoole.tar.gz "https://github.com/swoole/swoole-src/archive/master.tar.gz" \
     && mkdir -p /tmp/build/swoole && cd /tmp/build/swoole \
     && tar zxvf /tmp/packages/swoole.tar.gz --strip-components 1 \
-    && /usr/local/php8/bin/phpize && \
-        ./configure --with-php-config=/usr/local/php8/bin/php-config \
+    && /usr/local/php8/bin/phpize \
+        && ./configure --with-php-config=/usr/local/php8/bin/php-config \
         --enable-openssl \
         --enable-mysqlnd \
         --enable-http2  \
-        --enable-sockets --enable-swoole-curl --enable-swoole-json && \
+        --enable-sockets --enable-swoole-curl --enable-swoole-json \
     && make && make install \
     && bash -i -c "\
     pecl channel-update pecl.php.net \
@@ -186,39 +184,28 @@ yasd.remote_port=9000 \n\
 
 # 结尾. 使用体验优化
 RUN set -ex \
-    && sudo apt-get install -y bash-completion \
+    && apt-get install -y bash-completion expect \
     && echo '\
 if [ -f /etc/bash_completion ]; then \n\
 . /etc/bash_completion \n\
 fi \n\
     '> /etc/bash.bashrc \
-    && sudo apt-get clean && sudo apt-get autoclean && sudo apt-get autoremove
-RUN set -ex \
+    && apt-get clean && apt-get autoclean && apt-get autoremove \
     && sed -i "s/#alias ll='ls /alias ll='ls /" /root/.bashrc \
     && sed -i "s/#alias ll='ls /alias ll='ls /" $HOME/.bashrc \
     && mkdir /code \
     && mkdir -p $HOME/.vscode/User \
-    && mkdir -p $HOME/.vscode-extzhsensions \
-    && echo 'ide添加插件包：' \
-#    code-server --install-extension <extension id>
-#    && cd $HOME/.vscode-extensions && tar zxf /tmp/vscode-docker/extensions.tar.gz --strip-components 1 \
-#     VS Code 的中文（简体）语言包
-    && code-server --install-extension ms-ceintl.vscode-language-pack-zh-hans \
-#     vscode-icons
-    && code-server --install-extension vscode-icons-team.vscode-icons \
-#     Go for Visual Studio Code
-    && code-server --install-extension golang.go \
-#     Icon Fonts for Visual Studio Code
-    && code-server --install-extension idleberg.icon-fonts \
-#     Python extension for Visual Studio Code
-    && code-server --install-extension ms-python.python \
-#     PHP Debug Adapter for Visual Studio Code
-    && code-server --install-extension felixfbecker.php-debug \
+    && mkdir -p $HOME/.vscode-extensions \
     && echo '\
 { \n\
     "workbench.colorTheme": "Default Dark+", \n\
     "workbench.iconTheme": "vscode-icons" \n\
 }' > $HOME/.vscode/User/settings.json \
+    && echo 'ide添加插件包：' \
+    && cd $HOME/.vscode-extensions && tar zxf /tmp/vscode-docker/extensions.tar.gz --strip-components 1 \
+# GitHub登陆脚本
+    && cp /tmp/shell/cmd_setup_github.sh $HOME \
+    && echo '$HOME/cmd_setup_github.sh 登陆脚本添加成功' \
     && rm -rf /tmp/* \
 #    && echo '\
 #auth: password \n\

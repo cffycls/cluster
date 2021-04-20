@@ -41,6 +41,7 @@ main() {
     echo "[2/3] Install g to the ${HOME}/bin"
     mkdir -p "${HOME}/bin"
     tar -xz -f "${dest_file}" -C "${HOME}/bin"
+    rm -f "${dest_file}"
     chmod +x "${HOME}/bin/g"
 
     echo "[3/3] Set environment variables"
