@@ -81,8 +81,8 @@ RUN echo '开始安装：go + g' \
     && mkdir -p /usr/local/go && cd /usr/local/go \
     && tar -zxvf /tmp/packages/go1.16.1.linux-amd64.tar.gz --strip-components 1 \
     && echo '\n\n# ===== go 环境变量设置 =====\n' >> $HOME/.bashrc \
-    && echo 'export GOROOT=$GOROOT' >> $HOME/.bashrc \
-    && echo 'export PATH=$PATH:$GOROOT/bin' >> $HOME/.bashrc \
+    && echo "export GOROOT=$GOROOT" >> $HOME/.bashrc \
+    && echo "export PATH=\$PATH:$GOROOT/bin" >> $HOME/.bashrc \
     \
     && bash -i -c "source $HOME/.bashrc && go version"
 
@@ -208,7 +208,7 @@ fi \n\
     && cd $HOME/.vscode-extensions && tar -zxf /tmp/vscode-docker/vscode-extensions.tar.gz --strip-components 1 \
 # GitHub登陆脚本
     && cp /tmp/shell/cmd_setup_github.sh $HOME \
-    && echo '$HOME/cmd_setup_github.sh 登陆脚本添加成功' \
+    && echo "$HOME/cmd_setup_github.sh 登陆脚本添加成功" \
 #    && echo '\
 #auth: password \n\
 #password: $PASSWORD # This is randomly generated for each config.yaml \n\

@@ -17,17 +17,24 @@ go install github.com/go-delve/delve/cmd/dlv
 ```shell script
 go install github.com/go-delve/delve/cmd/dlv@latest
 ```
-- 初始化
+- 初始化 init.sh
 ```shell script
-# init.sh
 #!/bin/bash
 
 mkdir -p $HOME/.go
-export GOBIN=/usr/local/go/bin/
+export GOROOT=/usr/local/go
+export GOBIN=$GOROOT/bin
 export GOPATH=$HOME/.go
 export GO111MODULE=on
 export GOPROXY=https://mirrors.aliyun.com/goproxy/
 
-go get -u github.com/derekparker/delve/cmd/dlv
+sudo chown coder:coder -R /usr/local/go
+go install github.com/go-delve/delve/cmd/dlv@latest
 ```
+
+# 2.环境准备
+```shell script
+docker rm -f g3; docker run -itd --name g3 -v ~/workdir/coder-server/code:/code -p 8080:8080 cffycls/webide-debian:go-php-python-v1.2
+```
+
 

@@ -44,7 +44,6 @@ export http_proxy=http://127.0.0.1:1087;export https_proxy=http://127.0.0.1:1087
 docker rm -f n3; docker run --name n3 -p 8080:8080 -v  D:\workdir\MyProject:\code -itd cffycls/webide-debian
 docker rm -f g3; docker run -itd --name g3 -v ~/workdir/coder-server/code:/code -p 8080:8080 cffycls/webide-debian:go-php-python-v1.2
 # -v ~/workdir/coder-server/user-home:/home/coder
-
 ```
 
 # 4. git ssl问题
