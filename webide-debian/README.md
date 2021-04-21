@@ -42,15 +42,8 @@ export http_proxy=http://127.0.0.1:1087;export https_proxy=http://127.0.0.1:1087
 
 # win10.powershell命令行
 docker rm -f n3; docker run --name n3 -p 8080:8080 -v  D:\workdir\MyProject:\code -itd cffycls/webide-debian
-docker rm -f g3; docker run -itd --name g3 -v ~/workdir/coder-server/code:/code -v ~/workdir/coder-server/user-home:/home/coder -p 8080:8080 cffycls/webide-debian:go-php-python-v1.2
-
-mkdir -p $HOME/.go
-export GOBIN=/usr/local/go/bin/
-export GOPATH=$HOME/.go
-export GO111MODULE=on
-export GOPROXY=https://mirrors.aliyun.com/goproxy/
-
-go get -u github.com/derekparker/delve/cmd/dlv
+docker rm -f g3; docker run -itd --name g3 -v ~/workdir/coder-server/code:/code -p 8080:8080 cffycls/webide-debian:go-php-python-v1.2
+# -v ~/workdir/coder-server/user-home:/home/coder
 
 ```
 
@@ -60,7 +53,7 @@ go get -u github.com/derekparker/delve/cmd/dlv
 sudo apt-get -y install build-essential fakeroot dpkg-dev libcurl4-openssl-dev
 sudo apt-get build-dep git -y
 mkdir ~/git-openssl && cd ~/git-openssl
-apt-get source git && mv *.orig.tar.xz git.tar.xz 
+apt-get source git && mv *.orig.tar.xz git.tar.xz $GOROOT
 tar -Jxvf git.tar.xz && mv git-* git && cd git
 ./configure --with-openssl 
 sudo make && sudo make install 

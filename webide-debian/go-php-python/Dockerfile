@@ -28,7 +28,6 @@ ENV PASSWORD=123456 \
 
 ADD packages /tmp/packages
 ADD shell /tmp/shell
-ADD vscode-docker /tmp/vscode-docker
 
 RUN echo '开始安装基础软件包' \
     && set -ex \
@@ -183,7 +182,9 @@ yasd.remote_port=9000 \n\
 
 
 # 结尾. 使用体验优化
+ADD vscode-docker /tmp/vscode-docker
 RUN set -ex \
+    && echo '使用体验优化：' \
     && apt-get install -y bash-completion expect \
     && echo '\
 if [ -f /etc/bash_completion ]; then \n\
@@ -194,25 +195,26 @@ fi \n\
     && sed -i "s/#alias ll='ls /alias ll='ls /" /root/.bashrc \
     && sed -i "s/#alias ll='ls /alias ll='ls /" $HOME/.bashrc \
     && mkdir /code \
+    && chown -R coder:coder /code \
+    \
+    && echo '编辑器处理，ide添加插件包：' \
     && mkdir -p $HOME/.vscode/User \
-    && mkdir -p $HOME/.vscode-extensions \
     && echo '\
 { \n\
     "workbench.colorTheme": "Default Dark+", \n\
     "workbench.iconTheme": "vscode-icons" \n\
 }' > $HOME/.vscode/User/settings.json \
-    && echo 'ide添加插件包：' \
-    && cd $HOME/.vscode-extensions && tar zxf /tmp/vscode-docker/extensions.tar.gz --strip-components 1 \
+    && mkdir -p $HOME/.vscode-extensions \
+    && cd $HOME/.vscode-extensions && tar -zxf /tmp/vscode-docker/vscode-extensions.tar.gz --strip-components 1 \
 # GitHub登陆脚本
     && cp /tmp/shell/cmd_setup_github.sh $HOME \
     && echo '$HOME/cmd_setup_github.sh 登陆脚本添加成功' \
-    && rm -rf /tmp/* \
 #    && echo '\
 #auth: password \n\
 #password: $PASSWORD # This is randomly generated for each config.yaml \n\
 #cert: false \n\
 #    '>~/.config/code-server/config.yaml \
-    && chown -R coder:coder $HOME && chown -R coder:coder /code
+    && chown -R coder:coder $HOME
 
 
 # 启动配置
