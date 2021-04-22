@@ -69,7 +69,6 @@ trusted-host=mirrors.aliyun.com \n\
 RUN echo '2.开始安装：g + go' \
     && set -ex \
     && /tmp/shell/g-install.sh
-#    && $HOME/bin/g install 1.16.1
 
 
 ## 3. php
@@ -200,11 +199,11 @@ RUN set -ex \
     && echo 'export PATH="$PATH:/home/coder/.pyenv/bin"' >> /etc/profile \
     && echo 'eval "$(pyenv init -)"' >> /etc/profile \
     && echo 'eval "$(pyenv virtualenv-init -)" \n' >> /etc/profile \
-    && bash -i -c "source /etc/profile" && pyenv -v \
+    && bash -i -c "source /etc/profile" && /home/coder/.pyenv/bin/pyenv -v \
     \
     && echo '\n# ===== php 环境变量设置 =====\n' >> /etc/profile \
     && echo 'export PATH="$PATH:/usr/local/php8/bin"' >> /etc/profile \
-    && bash -i -c "source /etc/profile" && php -v && composer -V && php --ini \
+    && bash -i -c "source /etc/profile" && php -v && /usr/local/php8/bin/composer -V && php --ini \
     \
     && echo '\n\n# ===== go 环境变量设置（沿用g配置） =====\n' >> /etc/profile \
     && echo 'export G_MIRROR="https://golang.google.cn/dl/" \n' >> /etc/profile \
@@ -214,7 +213,7 @@ RUN set -ex \
     && echo "export GO111MODULE=on" >> /etc/profile \
     && echo "export GOPROXY=https://mirrors.aliyun.com/goproxy" >> /etc/profile \
     && echo 'export PATH="${HOME}/bin:${HOME}/.g/go/bin:$PATH"' >> /etc/profile \
-    && bash -i -c "source /etc/profile" && g -v && go version && go env \
+    && bash -i -c "source /etc/profile" && $HOME/bin/g -v \
     && rm -rf /tmp/* \
     && chown coder:coder -R $HOME
 
