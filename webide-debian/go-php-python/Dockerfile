@@ -49,54 +49,31 @@ RUN echo '**开始安装其它依赖' \
 
 
 # 1. 安装 python
-RUN echo '开始安装: python3.9 + pip包管理' \
+RUN echo '1.开始安装：pyenv + python3.9' \
+    && PYTHON_VERSION='3.9.3' \
     && set -ex \
-    && mkdir -p /usr/local/python3 \
-    && mkdir -p /tmp/bulid/python3 && cd /tmp/bulid/python3 && tar -zxvf /tmp/packages/Python-3.9.4.tgz --strip-components 1 \
-    && ./configure --prefix=/usr/local/python3 --enable-optimizations \
-    && make && make install \
-    && ln -sf /usr/local/python3/bin/python3 /usr/bin/python && python -V \
-    && ln -sf /usr/local/python3/bin/pip3 /usr/bin/pip && pip -V \
-    && mkdir -p /home/coder/.pip && echo '\
+    && rm -rf /home/coder/.pyenv && runuser -l coder /tmp/shell/pyenv-installer.sh \
+    && chown coder:coder -R $HOME/.pyenv \
+#    && wget "https://npm.taobao.org/mirrors/python/${PYTHON_VERSION}/Python-${PYTHON_VERSION}.tar.xz" -P ~/.pyenv/cache \
+#    && runuser -l coder $HOME/.pyenv/bin/pyenv install $PYTHON_VERSION \
+    && mkdir -p $HOME/.pip && echo '\
 [global] \n\
 index-url = http://mirrors.aliyun.com/pypi/simple/ \n\
 \n\
 [install] \n\
 trusted-host=mirrors.aliyun.com \n\
-'> /home/coder/.pip/pip.conf
+'> $HOME/.pip/pip.conf \
+    && chown coder:coder -R $HOME/.pip
 
-RUN echo '开始安装：pyenv' \
+# 2. go
+RUN echo '2.开始安装：g + go' \
     && set -ex \
-# https://github.com -> https://github.com.cnpmjs.org
-    && rm -rf /home/coder/.pyenv && runuser -l coder /tmp/shell/pyenv-installer.sh \
-    && echo '\n\n# ===== pyenv 环境变量设置 =====\n' >> $HOME/.bashrc \
-    && echo 'export PATH="/home/coder/.pyenv/bin:$PATH"' >> $HOME/.bashrc \
-    && echo 'eval "$(pyenv init -)"' >> $HOME/.bashrc \
-    && echo 'eval "$(pyenv virtualenv-init -)" \n' >> $HOME/.bashrc \
-    && bash -i -c "source $HOME/.bashrc && pyenv -v"
-
-# 4. go
-RUN echo '开始安装：go + g' \
-    && set -ex \
-    && mkdir -p /usr/local/go && cd /usr/local/go \
-    && tar -zxvf /tmp/packages/go1.16.1.linux-amd64.tar.gz --strip-components 1 \
-    && echo '\n\n# ===== go 环境变量设置 =====\n' >> $HOME/.bashrc \
-    && echo "export GOROOT=$GOROOT" >> $HOME/.bashrc \
-    && echo "export PATH=\$PATH:$GOROOT/bin" >> $HOME/.bashrc \
-    \
-    && bash -i -c "source $HOME/.bashrc && go version"
-
-RUN echo '安装g' \
-    && set -ex \
-# https://github.com -> https://github.com.cnpmjs.org
-    && /tmp/shell/g-install.sh \
-    && mkdir -p ${HOME}/.g/go \
-    && echo 'export G_MIRROR=https://golang.google.cn/dl/ \n' >> $HOME/.bashrc \
-    && bash -i -c "source $HOME/.bashrc && g -v"
+    && /tmp/shell/g-install.sh
+#    && $HOME/bin/g install 1.16.1
 
 
-## 5. php
-RUN echo '开始安装：php + composer + swoole' \
+## 3. php
+RUN echo '3.开始安装：php' \
     && set -ex \
     && mkdir -p /usr/local/php8 \
     && mkdir -p /tmp/bulid/php8 && cd /tmp/bulid/php8 \
@@ -133,14 +110,12 @@ RUN echo '开始安装：php + composer + swoole' \
             --disable-cgi \
         && make -j "$(nproc)" \
         && find -type f -name '*.a' -delete \
-        && make install \
-    && echo 'export PATH=$PATH:/usr/local/php8/bin' >> $HOME/.bashrc \
-    && bash -i -c "source $HOME/.bashrc && php -v"
+        && make install
 
-RUN echo '安装swoole及其他扩展' \
+RUN echo '3.1安装swoole及其他扩展' \
     && set -ex \
     && wget -O /tmp/packages/swoole.tar.gz "https://github.com/swoole/swoole-src/archive/master.tar.gz" \
-    && mkdir -p /tmp/build/swoole && cd /tmp/build/swoole \
+    && mkdir -p /tmp/bulid/swoole && cd /tmp/bulid/swoole \
     && tar zxvf /tmp/packages/swoole.tar.gz --strip-components 1 \
     && /usr/local/php8/bin/phpize \
         && ./configure --with-php-config=/usr/local/php8/bin/php-config \
@@ -149,16 +124,15 @@ RUN echo '安装swoole及其他扩展' \
         --enable-http2  \
         --enable-sockets --enable-swoole-curl --enable-swoole-json \
     && make && make install \
-    && bash -i -c "\
-    pecl channel-update pecl.php.net \
-    && pecl install uuid igbinary event inotify apcu redis protobuf \
-    "
+    && /usr/local/php8/bin/pecl channel-update pecl.php.net \
+    && /usr/local/php8/bin/pecl install uuid igbinary event inotify apcu redis protobuf
+
 #     amqp安装报错，暂不支持
-RUN echo '安装php调试yasd' \
+RUN echo '3.2安装php调试yasd' \
     && set -ex \
 #    [yasd] https://mp.weixin.qq.com/s/qw1nKd7hIPYiBqnewUE_gg
     && apt-get install -y gnutls-bin \
-    && cd /tmp/build/ \
+    && cd /tmp/bulid/ \
 #       https://github.com/swoole/yasd.git
         && git clone https://gitee.com/jimmylau/yasd.git  && cd yasd \
         && /usr/local/php8/bin/phpize --clean && /usr/local/php8/bin/phpize \
@@ -174,17 +148,17 @@ yasd.remote_port=9000 \n\
     && echo '安装composer' \
     && set -ex \
     && cp /tmp/shell/php.ini /usr/local/php8/etc/php.ini \
-    && bash -i -c "php -m \
+    # 脚本内部使用 php命令
+    && ln -sf /usr/local/php8/bin/php /usr/bin/php \
     && curl -sS https://getcomposer.org/installer | php \
-    && mv composer.phar /usr/local/php8/bin/composer && composer -V \
-    && composer config -g repo.packagist composer https://mirrors.aliyun.com/composer/ \
-    "
+    && mv composer.phar /usr/local/php8/bin/composer \
+    && /usr/local/php8/bin/composer config -g repo.packagist composer https://mirrors.aliyun.com/composer/
 
 
-# 结尾. 使用体验优化
+# 4.结尾. 使用体验优化
 ADD vscode-docker /tmp/vscode-docker
 RUN set -ex \
-    && echo '使用体验优化：' \
+    && echo '4.使用体验优化：' \
     && apt-get install -y bash-completion expect \
     && echo '\
 if [ -f /etc/bash_completion ]; then \n\
@@ -216,6 +190,33 @@ fi \n\
 #    '>~/.config/code-server/config.yaml \
     && chown -R coder:coder $HOME
 
+RUN set -ex \
+    && echo '5.全局变量设置：' \
+    && echo '\n\n# =============================\n' >> /etc/profile \
+    && echo '# ===== 全局变量设置 =====\n' >> /etc/profile \
+    && echo '# =============================\n' >> /etc/profile \
+    \
+    && echo '\n# ===== pyenv 环境变量设置 =====\n' >> /etc/profile \
+    && echo 'export PATH="$PATH:/home/coder/.pyenv/bin"' >> /etc/profile \
+    && echo 'eval "$(pyenv init -)"' >> /etc/profile \
+    && echo 'eval "$(pyenv virtualenv-init -)" \n' >> /etc/profile \
+    && bash -i -c "source /etc/profile" && pyenv -v \
+    \
+    && echo '\n# ===== php 环境变量设置 =====\n' >> /etc/profile \
+    && echo 'export PATH="$PATH:/usr/local/php8/bin"' >> /etc/profile \
+    && bash -i -c "source /etc/profile" && php -v && composer -V && php --ini \
+    \
+    && echo '\n\n# ===== go 环境变量设置（沿用g配置） =====\n' >> /etc/profile \
+    && echo 'export G_MIRROR="https://golang.google.cn/dl/" \n' >> /etc/profile \
+    && echo "export GOROOT=${HOME}/.g/go" >> /etc/profile \
+    && echo "export GOBIN=$GOROOT/bin" >> /etc/profile \
+    && echo "export GOPATH=$HOME/.go" >> /etc/profile \
+    && echo "export GO111MODULE=on" >> /etc/profile \
+    && echo "export GOPROXY=https://mirrors.aliyun.com/goproxy" >> /etc/profile \
+    && echo 'export PATH="${HOME}/bin:${HOME}/.g/go/bin:$PATH"' >> /etc/profile \
+    && bash -i -c "source /etc/profile" && g -v && go version && go env \
+    && rm -rf /tmp/* \
+    && chown coder:coder -R $HOME
 
 # 启动配置
 USER coder
@@ -223,3 +224,5 @@ WORKDIR /code
 ENTRYPOINT ["code-server","--extensions-dir=/home/coder/.vscode-extensions","--auth=none","--bind-addr=0.0.0.0:8080","--user-data-dir=/home/coder/.vscode",">/home/coder/.vscode/runtime.log","2>&1","/code"]
 
 # https://hub.docker.com/r/linuxserver/code-server
+# docker build -t cffycls/webide-debian:go-php-python-v1.2 .
+

@@ -32,9 +32,19 @@ sudo chown coder:coder -R /usr/local/go
 go install github.com/go-delve/delve/cmd/dlv@latest
 ```
 
-# 2.环境准备
+# 2.环境准备GOPATH
 ```shell script
 docker rm -f g3; docker run -itd --name g3 -v ~/workdir/coder-server/code:/code -p 8080:8080 cffycls/webide-debian:go-php-python-v1.2
+
+echo '\
+export GOROOT=/usr/local/go
+export GOBIN=$GOROOT/bin
+export GOPATH=$HOME/.go
+export GO111MODULE=on
+export GOPROXY=https://mirrors.aliyun.com/goproxy/
+'>> /etc/profile \
 ```
+按 Ctrl+Shift+P ，选择 Go: Install/Update Tools, 选择 dlv, 点击 ok
+
 
 
