@@ -1,12 +1,12 @@
 # php8.03; 2021.04 link: https://github.com/docker-library/php/blob/master/8.0/alpine3.13/cli/Dockerfile
 # Base images 基础镜像+阿里源
-FROM alpine:3.13
+FROM alpine:3.14
 
 #MAINTAINER 维护者信息: +fileinfo
 MAINTAINER cffycls@foxmail.com
 
 # dependencies required for running "phpize" 2020.4.26组件更新
-ENV PHP_VERSION=8.0.3 \
+ENV PHP_VERSION=8.0.8 \
     PHPIZE_DEPS="autoconf dpkg-dev dpkg file g++ gcc libc-dev make pkgconf re2c " \
     PHP_DEVS="argon2-dev coreutils curl-dev libedit-dev libsodium-dev libxml2-dev openssl-dev sqlite-dev \
         libjpeg-turbo-dev libxpm-dev gd-dev gettext-dev freetype-dev libevent-dev rabbitmq-c-dev pcre2-dev \
@@ -96,10 +96,7 @@ RUN echo '编译安装swoole及其它扩展' \
     && apk del git \
     && /usr/local/php/bin/phpize && ./configure \
         --with-php-config=/usr/local/php/bin/php-config \
-        --enable-openssl \
-        --enable-mysqlnd \
-        --enable-http2  \
-        --enable-sockets --enable-swoole-curl --enable-swoole-json \
+        --enable-openssl --enable-http2 --enable-swoole-curl --enable-swoole-json \
 	\
     && make && make install && \
     cd ../ && rm -rf swoole \

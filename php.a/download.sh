@@ -1,7 +1,7 @@
 #!/bin/bash
 #2020.5.21
 
-wget -O packages/php.tar.xz "https://www.php.net/distributions/php-8.0.3.tar.xz" && \
+wget -O packages/php.tar.xz "https://www.php.net/distributions/php-8.0.8.tar.xz" && \
     # wget -O packages/inotify.tgz "https://pecl.php.net/get/inotify-2.0.0.tgz" && \
     # wget -O packages/redis.tgz "https://pecl.php.net/get/redis-5.2.1.tgz" && \
     wget -O packages/libuuid.tgz "http://nchc.dl.sourceforge.net/project/libuuid/libuuid-1.0.3.tar.gz" #&& \

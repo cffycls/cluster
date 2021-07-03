@@ -191,22 +191,22 @@ fi \n\
 
 RUN set -ex \
     && echo '5.全局变量设置：' \
-    && echo '\n\n# =============================\n' >> /etc/profile \
-    && echo '# ===== 全局变量设置 =====\n' >> /etc/profile \
-    && echo '# =============================\n' >> /etc/profile \
+    && echo '\n\n# =============================' >> /etc/profile \
+    && echo '# ===== 全局变量设置 =====' >> /etc/profile \
+    && echo '# =============================' >> /etc/profile \
     \
-    && echo '\n# ===== pyenv 环境变量设置 =====\n' >> /etc/profile \
+    && echo '# ===== pyenv 环境变量设置 =====\n' >> /etc/profile \
     && echo 'export PATH="$PATH:/home/coder/.pyenv/bin"' >> /etc/profile \
     && echo 'eval "$(pyenv init -)"' >> /etc/profile \
-    && echo 'eval "$(pyenv virtualenv-init -)" \n' >> /etc/profile \
+    && echo 'eval "$(pyenv virtualenv-init -)"' >> /etc/profile \
     && bash -i -c "source /etc/profile" && /home/coder/.pyenv/bin/pyenv -v \
     \
-    && echo '\n# ===== php 环境变量设置 =====\n' >> /etc/profile \
+    && echo '\n# ===== php 环境变量设置 =====' >> /etc/profile \
     && echo 'export PATH="$PATH:/usr/local/php8/bin"' >> /etc/profile \
     && bash -i -c "source /etc/profile" && php -v && /usr/local/php8/bin/composer -V && php --ini \
     \
-    && echo '\n\n# ===== go 环境变量设置（沿用g配置） =====\n' >> /etc/profile \
-    && echo 'export G_MIRROR="https://golang.google.cn/dl/" \n' >> /etc/profile \
+    && echo '\n\n# ===== go 环境变量设置（沿用g配置） =====' >> /etc/profile \
+    && echo 'export G_MIRROR="https://golang.google.cn/dl/"' >> /etc/profile \
     && echo "export GOROOT=${HOME}/.g/go" >> /etc/profile \
     && echo "export GOBIN=$GOROOT/bin" >> /etc/profile \
     && echo "export GOPATH=$HOME/.go" >> /etc/profile \
