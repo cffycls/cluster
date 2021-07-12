@@ -1,4 +1,4 @@
-# php8.03; 2021.04 link: https://github.com/docker-library/php/blob/master/8.0/alpine3.13/cli/Dockerfile
+# php8.03; 2021.04 link: https://github.com/docker-library/php/blob/master/8.0/alpine3.14/cli/Dockerfile
 # Base images 基础镜像+阿里源
 FROM alpine:3.14
 
