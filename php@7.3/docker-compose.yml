@@ -1,0 +1,7 @@
+version: "3.9"  # optional since v1.27.0
+services:
+  p73:
+    build: .
+    image: cffycls/php73
+    container_name: p73
+    restart: on-failure

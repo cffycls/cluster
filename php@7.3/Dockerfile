@@ -98,7 +98,7 @@ RUN set -eux; \
 	mkdir -p /var/www/html; \
 	chown www-data:www-data /var/www/html; \
 	chmod 777 /var/www/html; \
-	cd /usr/local/etc; \
+	cd /usr/local/php/etc; \
     	if [ -d php-fpm.d ]; then \
     		# for some reason, upstream's php-fpm.conf.default has "include=NONE/etc/php-fpm.d/*.conf"
     		sed 's!=NONE/!=!g' php-fpm.conf.default | tee php-fpm.conf > /dev/null; \
@@ -136,6 +136,7 @@ RUN set -eux; \
     	} | tee php-fpm.d/zz-docker.conf
 
 EXPOSE 9000
-CMD ["php-fpm"]
+CMD ["php-fpm",  "-c", "/usr/local/php/etc/php.ini", "-y", "/usr/local/php/etc/php-fpm.conf"]
 # docker build -t cffycls/php73 .
-# docker run -itd --name p73 cffycls/php73
+# docker rm -f p73; docker run -itd --name p73 cffycls/php73
+# docker-compose build
