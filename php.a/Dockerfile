@@ -101,48 +101,6 @@ RUN echo '编译安装swoole及其它扩展' \
     && make && make install && \
     cd ../ && rm -rf swoole \
 	\
-	\
-	#inotify 2.+
-    #&& \
-    #mkdir -p ~/build/inotify && cd ~/build/inotify && \
-    #tar -zxf /tmp/inotify.tgz --strip-components 1 && \
-    #/usr/local/php/bin/phpize && \
-    #./configure \
-    #    --with-php-config=/usr/local/php/bin/php-config \
-    #    --enable-inotify \
-    #    && \
-    #make && make install && \
-    #cd .. && rm -rf inotify \
-	#\
-	#\
-    #redis 5.+
-    #&& \
-    #mkdir -p ~/build/redis && cd ~/build/redis && \
-    #tar -zxf /tmp/redis.tgz --strip-components 1 && \
-    #/usr/local/php/bin/phpize && \
-    #./configure \
-    #    --with-php-config=/usr/local/php/bin/php-config \
-    #    --enable-redis \
-    #    && \
-    #make && make install && \
-    #cd .. && rm -rf redis \
-	#\
-	#\
-    #uuid 1.0.4 (libuuid-1.0.3)
-    && \
-    mkdir -p ~/build/libuuid && cd ~/build/libuuid && \
-    tar -zxf /tmp/libuuid.tgz --strip-components 1 && \
-    ./configure --prefix=/usr && \
-    make && make install && \
-    cd ../ && rm -rf libuuid \
-    #&& \
-    #mkdir -p ~/build/uuid && cd ~/build/uuid && \
-    #tar -zxf /tmp/uuid.tgz --strip-components 1 && \
-    #/usr/local/php/bin/phpize && \
-    #./configure --with-php-config=/usr/local/php/bin/php-config && \
-    #make && make install && \
-    #cd ../ && rm -rf uuid \
-    #\
     #\
     #memcached 3.+ 需要libmemcached
     #&& \
@@ -166,21 +124,21 @@ RUN echo '编译安装swoole及其它扩展' \
     #    && \
     #make && make install && \
     #cd ../ && rm -rf event \
-    #\
-    # imagick-3.+ 需要imagemagick
-    #&& \
-    #mkdir -p ~/build/imagemagick && cd ~/build/imagemagick && \
-    #tar -zxf /tmp/imagemagick.tgz --strip-components 1 && \
-    #./configure && \
-    #make && make install && \
-    #cd ../ && rm -rf imagemagick && \
-    #\
-    #mkdir -p ~/build/imagick && cd ~/build/imagick && \
-    #tar -zxf /tmp/imagick.tgz --strip-components 1 && \
-    #/usr/local/php/bin/phpize && \
-    #./configure --with-php-config=/usr/local/php/bin/php-config && \
-    #make && make install && \
-    #cd ../ && rm -rf imagick \
+    \
+#     imagick-3.+ 需要imagemagick
+    && \
+    mkdir -p ~/build/imagemagick && cd ~/build/imagemagick && \
+    tar -zxf /tmp/imagemagick.tgz --strip-components 1 && \
+    ./configure && \
+    make && make install && \
+    cd ../ && rm -rf imagemagick && \
+    \
+    mkdir -p ~/build/imagick && cd ~/build/imagick && \
+    tar -zxf /tmp/imagick.tgz --strip-components 1 && \
+    /usr/local/php/bin/phpize && \
+    ./configure --with-php-config=/usr/local/php/bin/php-config && \
+    make && make install && \
+    cd ../ && rm -rf imagick \
     \
 #======================================================================================================
     \
@@ -192,8 +150,12 @@ RUN echo '编译安装swoole及其它扩展' \
     #&& pecl install memcache memcached  \ 只占用内存移除
     && rm -rf /tmp/* ~/.pearrc ~/build \
     && apk del $PHPIZE_DEPS \
-    && php -m
+    && php -m \
+    && php -r "copy('https://install.phpcomposer.com/installer', 'composer-setup.php');" \
+    && php composer-setup.php && rm -f composer-setup.php \
+    && mv composer.phar /usr/local/bin/composer \
+    && composer -V
 
 EXPOSE 9000
 CMD ["php", "-a"]
-# docker build -t cffycls/php .
+# docker build -t cffycls/php:app-tools .
