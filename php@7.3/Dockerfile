@@ -86,7 +86,7 @@ RUN echo '编译安装php' \
     && cd ../ && rm -rf php \
     && pecl channel-update pecl.php.net \
 #    && pecl install igbinary amqp apcu protobuf redis uuid inotify event \
-    && pecl install apcu redis \
+    && pecl install apcu redis xdebug \
     #&& pecl install memcache memcached  \ 只占用内存移除
     && rm -rf /tmp/* ~/.pearrc ~/build \
     && apk del $PHPIZE_DEPS \

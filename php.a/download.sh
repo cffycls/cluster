@@ -9,5 +9,22 @@ wget -O packages/php.tar.xz "https://www.php.net/distributions/php-8.0.8.tar.xz"
     # wget -O packages/memcached.tgz "https://pecl.php.net/get/memcached-3.1.5.tgz" && \
     # wget -O packages/event.tgz "http://pecl.php.net/get/event-2.5.4.tgz"
     # wget -O packages/pthreads.zip "https://codeload.github.com/krakjoe/pthreads/zip/master" && \
-    # wget -O imagemagick.tgz "https://www.imagemagick.org/download/ImageMagick.tar.gz" && \
-    # wget -O imagick.tgz "https://pecl.php.net/get/imagick-3.4.4.tgz"
+#     wget -O imagemagick.tgz "https://www.imagemagick.org/download/ImageMagick.tar.gz" && \
+#     wget -O imagick.tgz "https://pecl.php.net/get/imagick-3.5.1.tgz"
+
+
+# macOS
+wget -O imagemagick.tgz "https://www.imagemagick.org/download/ImageMagick.tar.gz" && \
+wget -O imagick.tgz "https://pecl.php.net/get/imagick-3.5.1.tgz" && \
+mkdir -p build/imagemagick && cd build/imagemagick && \
+tar -zxf ../../imagemagick.tgz --strip-components 1 && \
+./configure && \
+make && make install && \
+cd ../ && rm -rf imagemagick && \
+\
+mkdir -p build/imagick && cd build/imagick && \
+tar -zxf ../../imagick.tgz --strip-components 1 && \
+/usr/local/php/bin/phpize && \
+./configure --with-php-config=/usr/local/php/bin/php-config && \
+make && make install && \
+cd ../ && rm -rf imagick \

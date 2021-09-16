@@ -1,0 +1,79 @@
+version: "3.9"  # optional since v1.27.0
+
+networks:
+  web:
+    driver: bridge
+
+services:
+### php ###############################################
+  php73:
+    build: .
+    image: "cffycls/php73"
+    container_name: php73
+    restart: on-failure
+    networks:
+      - web
+    volumes:
+      - html:/var/www/html
+  php73-debug:
+    build: .
+    image: "cffycls/php73-debug"
+    container_name: php73-debug
+    restart: on-failure
+    networks:
+      - web
+    volumes:
+      - html:/var/www/html
+  ngx:
+    image: "nginx:latest"
+    container_name: ngx
+    ports:
+    - 10080:80
+    networks:
+      - web
+    volumes:
+      - html:/var/www/html
+  mysql1:
+    image: "mysql:latest"
+    container_name: mysql1
+    networks:
+      - web
+    volumes:
+      - mysql:/var/lib/mysql
+    environment:
+    - MYSQL_ROOT_PASSWORD=123456
+    - MYSQL_ALLOW_EMPTY_PASSWORD=0
+    - MYSQL_RANDOM_ROOT_PASSWORD=0
+  redis1:
+    image: "redis:latest"
+    container_name: redis1
+    ports:
+    - 16379:6379
+    networks:
+      - web
+    volumes:
+      - redis:/data
+  phpmyadmin:
+    image: "phpmyadmin:latest"
+    container_name: pma
+    networks:
+      - web
+    environment:
+      - PMA_ARBITRARY=1
+      - MYSQL_USER=phpmyadmin
+      - MYSQL_PASSWORD=123456
+      - MYSQL_ROOT_PASSWORD=123456root
+    ports:
+      - "10081:80"
+
+volumes:
+  html:
+    labels:
+      name: ../html
+  mysql:
+    labels:
+      name: ../mysql/data
+  redis:
+    labels:
+      name: ../redis/data
+
