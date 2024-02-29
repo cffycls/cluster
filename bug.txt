@@ -1,0 +1,18 @@
+1、本地编译2php7.3.17错误
+```
+collect2: error: ld returned 1 exit status
+Makefile:327: recipe for target 'sapi/phpdbg/phpdbg' failed
+make: *** [sapi/phpdbg/phpdbg] Error 1
+```
+在安裝 PHP 到系统中时要是发生「undefined reference to libiconv_open'」之类的错误信息，那表示在「./configure 」沒抓好一些环境变数值。错误发生点在建立「-o sapi/cli/php」是出错，没給到要 link 的 iconv 函式库参数。
+解决方法：编辑Makefile 大约77 行左右的地方: EXTRA_LIBS = ..... -lcrypt 在最后加上 -liconv，例如: EXTRA_LIBS = ..... -lcrypt -liconv 然后重新再次 make 即可。
+或者用另一种办法
+make ZEND_EXTRA_LIBS='-liconv'
+ln -s /usr/local/lib/libiconv.so.2 /usr/lib64/
+
+热升级： tar -xf解压-->./configure XX&&make -j8-->error-->vim Makefile-->make clean-->make -j8-->make install
+
+2、docker编译问题
+## oniguruma: 安装php7.4的过程中，mbstring的正则表达式处理功能对这个包有依赖性
+oniguruma \
+oniguruma-dev \

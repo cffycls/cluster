@@ -1,2 +1,14 @@
 .idea
-php.a/packages/*
+php.a/packages
+ngx_lua_waf
+redis/data/*
+redis_slave/data/*
+mysql/data/*
+mysql_slave/data/*
+openresty.a/logs/*
+openresty.b/logs/*
+rabbitmq/data/*
+rabbitmq/data13/*
+rabbitmq/data14/*
+consul/data.s/*
+consul/data.c/*
