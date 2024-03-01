@@ -1,5 +1,5 @@
 .idea
-php.a/packages
+phpswoole/packages
 ngx_lua_waf
 redis/data/*
 redis_slave/data/*
